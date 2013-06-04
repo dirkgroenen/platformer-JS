@@ -92,15 +92,15 @@ var groundTile = function(xpos,ypos,type){
 	
 	// Create an collision function
 	obj.onCollide = function(){
-		player.stopMoving();
+		
 	}
 	
 	// Return top of the tile
 	obj.getTop = function(){
-		return obj.Y-obj.height;
+		return obj.Y;
 	}
 	obj.getBottom = function(){
-		return obj.Y;
+		return obj.Y-obj.height;
 	}
 	obj.getLeft = function(){
 		return obj.X;
@@ -109,12 +109,55 @@ var groundTile = function(xpos,ypos,type){
 		return obj.X + obj.width;
 	}
 	
+	obj.getColPoint = function(point){
+		cors = [];
+		switch(point){
+			case 11:
+				cors['x'] = obj.X;
+				cors['y'] = obj.Y;
+				break;
+			case 12:
+				cors['x'] = obj.X+(obj.width/2);
+				cors['y'] = obj.Y;
+				break;
+			case 13:
+				cors['x'] = obj.X+obj.width;
+				cors['y'] = obj.Y;
+				break;
+			case 21:
+				cors['x'] = obj.X;
+				cors['y'] = obj.Y+(obj.height/2);
+				break;
+			case 22:
+				cors['x'] = obj.X+(obj.width/2);
+				cors['y'] = obj.Y+(obj.height/2);
+				break;
+			case 23:
+				cors['x'] = obj.X+obj.width;
+				cors['y'] = obj.Y+(obj.height/2);
+				break;
+			case 31:
+				cors['x'] = obj.X;
+				cors['y'] = obj.Y+obj.height;
+				break;
+			case 32:
+				cors['x'] = obj.X+(obj.width/2);
+				cors['y'] = obj.Y+obj.height;
+				break;
+			case 33:
+				cors['x'] = obj.X+obj.width;
+				cors['y'] = obj.Y+obj.height;
+				break;
+		}
+		return cors;
+	}
+	
 	return obj;
 }
 
 // The array that will tell how high every piece of ground must be
 // This will be level based, but for now we have one array
-var heightarray = [2,2,2,2,3,3,3,3,3,4,4,4,3,2,2,3,0,1,2,2,2,2,3,4,5,5,0,5,4,4,3,2,2,3,0,1,2,2,2,2,3,4,5,5,0,5,4,4,3,2,2,3,0,1,2];
+var heightarray = [2,2,2,2,3,3,3,3,3,4,4,4,3,2,2,0,0,1,1,2,2,2,3,4,5,5,0,5,4,4,3,2,2,3,0,1,2,2,2,2,3,4,5,5,0,5,4,4,3,2,2,3,0,1,2];
 
 var generateGroundTiles = function(){
 	// The ground needs to be drawn from the bottom of the canvas

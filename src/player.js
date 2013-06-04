@@ -5,18 +5,26 @@ var player = new (function(){
 	
 	// create the image
 	obj.image = new Image();
-	obj.image.src = 'graph/characters/Tux/tux_from_linux-00-11.png';
-	obj.width = 50;
-	obj.height = 55;
+	obj.image.src = 'graph/characters/Tux/tuxmove.png';
+	obj.width = 37;
+	obj.height = 56;
 	obj.X = 0;
 	obj.Y = 0;
 	
+	// Walk animation vars, interval prevents that every interval has a new animation
+	obj.frames = 1;
+    obj.actualFrame = 0;
+    obj.interval = 0;
+	
 	// Jump and fall attributes, including the attributes that will help with the gravity (and other move actions)
 	obj.isJumping = false;
-	obj.isFalling = false;
+	obj.isFalling = true;
 	obj.jumpSpeed = 0;
 	obj.fallSpeed = 0;
 	obj.isMoving = false;
+	obj.allowedToMoveRight = true;
+	obj.allowedToMoveLeft = true;
+	obj.currentMovement = null;
 	
 	// Methods
 	obj.setPosition = function(x,y){
@@ -30,8 +38,16 @@ var player = new (function(){
 		try{
 			// Draw the tile on the canvas
 			// drawImage(Image Object, source X, source Y, source Width, source Height, destination X (X position), destination Y (Y position), Destination width, Destination height)
-			ctx.drawImage(obj.image, obj.X, obj.Y, obj.width, obj.height);
+			ctx.drawImage(obj.image, 0, obj.height * obj.actualFrame, obj.width, obj.height, obj.X, obj.Y, obj.width, obj.height);
 		} catch(e){} // Do nothing
+		
+		if (obj.interval == 8 ) {
+            (obj.actualFrame == obj.frames) ? obj.actualFrame = 0 : obj.actualFrame++;
+			obj.interval = 0;
+		}
+		if(obj.isMoving){
+			obj.interval++;
+		}
 	}
 	
 	// Methods for jumping
@@ -41,6 +57,8 @@ var player = new (function(){
 			obj.fallSpeed = 0;
 			obj.isJumping = true;
 			obj.jumpSpeed = 15;
+			obj.allowedToMoveLeft = true;
+			obj.allowedToMoveRight = true;
 		}
 	}
 	
@@ -55,6 +73,9 @@ var player = new (function(){
 			obj.fallSpeed = 1;
 			obj.isFalling = true;
 		}
+		
+		obj.allowedToMoveLeft = true;
+		obj.allowedToMoveRight = true;
 	}
 	
 	// Methods for falling
@@ -69,6 +90,11 @@ var player = new (function(){
 		}
 	}
 	
+	obj.fall = function(){
+		obj.fallSpeed = 1;
+		obj.isFalling = true;
+	}
+	
 	obj.fallStop = function(){
 		// Stop falling
 		obj.isFalling = false;
@@ -77,20 +103,35 @@ var player = new (function(){
 	
 	// Methods for moving left or right
 	obj.moveLeft = function(){
-		if(obj.X > 0){
+		if(obj.X > 0 && obj.allowedToMoveLeft){
 			obj.setPosition(obj.X - 5,obj.Y);
+			obj.allowedToMoveRight = true;
+			obj.currentMovement = 'l';
 		}
 	}
 	
 	obj.moveRight = function(){
-		if(obj.X < c_width - obj.width){
+		if(obj.X < c_width - obj.width && obj.allowedToMoveRight){
 			obj.setPosition(obj.X + 5,obj.Y);
+			obj.allowedToMoveLeft = true;
+			obj.currentMovement = 'r';
 		}
 	}
 	
-	obj.stopMoving = function(){
+	obj.stopFalling = function(){
 		obj.isFalling = false;
 		obj.fallSpeed = 0;
+	}
+	
+	obj.stopMoving = function(){
+		switch(obj.currentMovement){
+			case 'l':
+				obj.allowedToMoveLeft = false;
+				break;
+			case 'r':
+				obj.allowedToMoveRight = false;
+				break;
+		}
 	}
 	
 	obj.getBottom = function(){
@@ -104,6 +145,49 @@ var player = new (function(){
 	}
 	obj.getRight = function(){
 		return obj.X+obj.width;
+	}
+	
+	obj.getColPoint = function(point){
+		cors = [];
+		switch(point){
+			case 11:
+				cors['x'] = obj.X;
+				cors['y'] = obj.Y;
+				break;
+			case 12:
+				cors['x'] = obj.X+(obj.width/2);
+				cors['y'] = obj.Y;
+				break;
+			case 13:
+				cors['x'] = obj.X+obj.width;
+				cors['y'] = obj.Y;
+				break;
+			case 21:
+				cors['x'] = obj.X;
+				cors['y'] = obj.Y+(obj.height/2);
+				break;
+			case 22:
+				cors['x'] = obj.X+(obj.width/2);
+				cors['y'] = obj.Y+(obj.height/2);
+				break;
+			case 23:
+				cors['x'] = obj.X+obj.width;
+				cors['y'] = obj.Y+(obj.height/2);
+				break;
+			case 31:
+				cors['x'] = obj.X;
+				cors['y'] = obj.Y+obj.height;
+				break;
+			case 32:
+				cors['x'] = obj.X+(obj.width/2);
+				cors['y'] = obj.Y+obj.height;
+				break;
+			case 33:
+				cors['x'] = obj.X+obj.width;
+				cors['y'] = obj.Y+obj.height;
+				break;
+		}
+		return cors;
 	}
 });
 
