@@ -3,16 +3,18 @@ var player = new (function(){
 	// Create a new object based on functions
 	var obj = this;
 	
+	// preload images
+	new Image().src = 'graph/characters/Robo/robowalk_l.png';
+	
 	// create the image
 	obj.image = new Image();
-	obj.image.src = 'graph/characters/Tux/tuxmove.png';
-	obj.width = 37;
-	obj.height = 56;
+	obj.width = 40;
+	obj.height = 57;
 	obj.X = 0;
 	obj.Y = 0;
 	
 	// Walk animation vars, interval prevents that every interval has a new animation
-	obj.frames = 1;
+	obj.frames = 3;
     obj.actualFrame = 0;
     obj.interval = 0;
 	
@@ -24,7 +26,9 @@ var player = new (function(){
 	obj.isMoving = false;
 	obj.allowedToMoveRight = true;
 	obj.allowedToMoveLeft = true;
-	obj.currentMovement = null;
+	obj.currentMovement = 'r';
+	obj.moveSpeed = 5;
+	obj.holdMovement = false;
 	
 	// Methods
 	obj.setPosition = function(x,y){
@@ -34,6 +38,7 @@ var player = new (function(){
 	
 	// Create the method that will draw the tile on the given position
 	obj.draw = function(){
+		obj.image.src = 'graph/characters/Robo/robowalk_'+obj.currentMovement+'.png';
 		// Try and catch to prevent that a JS error will block the whole game
 		try{
 			// Draw the tile on the canvas
@@ -41,7 +46,7 @@ var player = new (function(){
 			ctx.drawImage(obj.image, 0, obj.height * obj.actualFrame, obj.width, obj.height, obj.X, obj.Y, obj.width, obj.height);
 		} catch(e){} // Do nothing
 		
-		if (obj.interval == 8 ) {
+		if (obj.interval == 6 ) {
             (obj.actualFrame == obj.frames) ? obj.actualFrame = 0 : obj.actualFrame++;
 			obj.interval = 0;
 		}
@@ -91,8 +96,9 @@ var player = new (function(){
 	}
 	
 	obj.fall = function(){
-		obj.fallSpeed = 1;
+		obj.fallSpeed = 4;
 		obj.isFalling = true;
+		obj.isJumping = false;
 	}
 	
 	obj.fallStop = function(){
@@ -104,17 +110,19 @@ var player = new (function(){
 	// Methods for moving left or right
 	obj.moveLeft = function(){
 		if(obj.X > 0 && obj.allowedToMoveLeft){
-			obj.setPosition(obj.X - 5,obj.Y);
+			obj.setPosition(obj.X - obj.moveSpeed,obj.Y);
 			obj.allowedToMoveRight = true;
 			obj.currentMovement = 'l';
+			player.stopCamera = true;
 		}
 	}
 	
 	obj.moveRight = function(){
-		if(obj.X < c_width - obj.width && obj.allowedToMoveRight){
-			obj.setPosition(obj.X + 5,obj.Y);
+		if(obj.X < c_width - obj.width && obj.allowedToMoveRight && !obj.holdMovement){
+			obj.setPosition(obj.X + obj.moveSpeed,obj.Y);
 			obj.allowedToMoveLeft = true;
 			obj.currentMovement = 'r';
+			player.stopCamera = false;
 		}
 	}
 	
@@ -124,6 +132,7 @@ var player = new (function(){
 	}
 	
 	obj.stopMoving = function(){
+		obj.actualFrame = 0;
 		switch(obj.currentMovement){
 			case 'l':
 				obj.allowedToMoveLeft = false;
@@ -132,19 +141,6 @@ var player = new (function(){
 				obj.allowedToMoveRight = false;
 				break;
 		}
-	}
-	
-	obj.getBottom = function(){
-		return obj.Y-obj.height;
-	}
-	obj.getTop = function(){
-		return obj.Y;
-	}
-	obj.getLeft = function(){
-		return obj.X;
-	}
-	obj.getRight = function(){
-		return obj.X+obj.width;
 	}
 	
 	obj.getColPoint = function(point){
@@ -189,14 +185,23 @@ var player = new (function(){
 		}
 		return cors;
 	}
+	
+	obj.shoot = function(){
+		bullets.push(new bullet(obj.getColPoint(22)['x'],obj.getColPoint(22)['y'],obj.currentMovement));
+		currentBullets++;
+	}
 });
 
 // Search for the nearest block to stand on
 var placePlayerInField = function(){
 	startPos = 0;
-	groundTiles.forEach(function(tile){
-		//if(tile.X == 0 && tile.Y < startPos) startPos = tile.Y;
+	groundTiles.some(function(tile){
+		// Check for tiles below the player
+		if((tile.getColPoint(11)['x'] <= player.getColPoint(32)['x'] && tile.getColPoint(13)['x'] >= player.getColPoint(32)['x'])){
+			startPos = tile.getColPoint(11)['y'];
+			return true;
+		}
 	});
 	
-	player.setPosition(0,startPos);
-}();
+	player.setPosition(0,startPos-player.height+5);
+};

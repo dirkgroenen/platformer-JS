@@ -22,7 +22,7 @@ var clear = function(){
 t_width = 50, t_height = 50;
 var skyTiles = [];
 var groundTiles = [];
-
+var gameWidth = 0;
 
 // Create the sky
 var skyTile = function(xpos,ypos){
@@ -51,17 +51,13 @@ var skyTile = function(xpos,ypos){
 		} catch(e){} // Do nothing
 	}
 	
+	obj.setPosition = function(x,y){
+		obj.X = x;
+		obj.Y = y;
+	}
+	
 	return obj;
 }
-
-var generateSkyTiles = function(){
-	// Create a loop that runs through every possible tile in the canvas
-	for(var x = 0;x < c_width;x += t_width){
-		for(var y = 0;y < c_height;y += t_height){
-			skyTiles[x+y/50] = new skyTile(x,y);
-		}
-	}
-}();
 
 // Create the ground
 var groundTile = function(xpos,ypos,type){
@@ -152,18 +148,39 @@ var groundTile = function(xpos,ypos,type){
 		return cors;
 	}
 	
+	obj.setPosition = function(x,y){
+		obj.X = x;
+		obj.Y = y;
+	}
+	
 	return obj;
 }
 
-// The array that will tell how high every piece of ground must be
-// This will be level based, but for now we have one array
-var heightarray = [2,2,2,2,3,3,3,3,3,4,4,4,3,2,2,0,0,1,1,2,2,2,3,4,5,5,0,5,4,4,3,2,2,3,0,1,2,2,2,2,3,4,5,5,0,5,4,4,3,2,2,3,0,1,2];
-
-var generateGroundTiles = function(){
-	// The ground needs to be drawn from the bottom of the canvas
-	for(var x = 0;x < c_width;x += t_width){
-		for(var y = c_height-(heightarray[x/50]*50);y < c_height;y += t_height){
-			groundTiles[x+y/50] = ((y+(50*heightarray[x/50]) == 600)) ? new groundTile(x,y,"dirt_rock") : new groundTile(x,y,"dirt");
+var generateMap = function(map_array){
+	var xCor = 0,yCor = 0;
+	
+	// Loop through all the Y rows
+	for(var x = 0; x < map_array.length;x++){
+		// Loop through all the X rows
+		yCor = x*t_width;
+		
+		for(var y = 0;y < map_array[x].length;y++){
+			xCor = y*t_height;
+			
+			// Check which tile needs to be drawn
+			switch(map_array[x][y]){
+				case 0:
+					skyTiles[xCor+yCor/50] = new skyTile(xCor,yCor);
+					break;
+				case 1:
+					groundTiles[xCor+yCor/50] = new groundTile(xCor,yCor,"dirt");
+					break;
+				case 2:
+					groundTiles[xCor+yCor/50] = new groundTile(xCor,yCor,"dirt_rock");
+					break;
+			}
 		}
+		
+		gameWidth = map_array[x].length*t_width;
 	}
-}();
+};
