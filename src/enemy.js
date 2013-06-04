@@ -22,8 +22,8 @@ var enemy = function(x,options){
 	obj.currentMovement = 'r';
 	obj.walkSpeed = 2;
 	
-	obj.waypointLeft = Number(options[0]);
-	obj.waypointRight = Number(options[2]);
+	obj.waypointLeft = obj.startX-Number(options[0])*t_width;
+	obj.waypointRight = obj.startX+Number(options[2])*t_width;
 	obj.enemyType = Number(options[1]);
 	
 	// Methods
@@ -36,13 +36,20 @@ var enemy = function(x,options){
 		switch(obj.currentMovement){
 			case 'l':
 				obj.X -= obj.walkSpeed;
-				if(obj.X <= obj.startX-obj.waypointLeft*t_width) obj.currentMovement = 'r';
+				if(obj.X <= obj.waypointLeft) obj.currentMovement = 'r';
 				break;
 			case 'r':
 				obj.X += obj.walkSpeed;
-				if(obj.X >= obj.startX+obj.waypointRight*t_width) obj.currentMovement = 'l';
+				if(obj.X >= obj.waypointRight) obj.currentMovement = 'l';
 				break;
 		}
+		obj.interval++;
+	}
+	
+	obj.changeWPs = function(pxs){
+		obj.startX -= pxs;
+		obj.waypointLeft -= pxs;
+		obj.waypointRight -= pxs;
 	}
 	
 	// Create the method that will draw the tile on the given position
@@ -59,7 +66,6 @@ var enemy = function(x,options){
             (obj.actualFrame == obj.frames) ? obj.actualFrame = 0 : obj.actualFrame++;
 			obj.interval = 0;
 		}
-		obj.interval++;
 	}
 	
 	obj.getColPoint = function(point){

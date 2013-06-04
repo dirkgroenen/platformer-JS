@@ -67,12 +67,17 @@ var boxCameraCheck = function(){
 	if(player.isMoving && player.X > c_width*0.5 && !player.stopCamera && scrolled < gameWidth-c_width){
 		scrolled += player.moveSpeed;
 		player.holdMovement = true;
-
+		
 		groundTiles.forEach(function(tile){
 			tile.setPosition(tile.X-player.moveSpeed,tile.Y);
 		});
 		skyTiles.forEach(function(tile){
 			tile.setPosition(tile.X-player.moveSpeed/1.5,tile.Y);
+		});
+		
+		enemies.forEach(function(enemie){
+			enemie.changeWPs(player.moveSpeed);
+			enemie.setPosition(enemie.X-player.moveSpeed,enemie.Y);
 		});
 	}
 	else{
