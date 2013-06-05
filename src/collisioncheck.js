@@ -15,6 +15,7 @@ var checkCollision = function(){
 					player.stopCamera = true;
 				}
 				
+				
 				// Check the tiles under the player's X
 				if((player.getColPoint(32)['x'] >= tile.getLeft() && player.getColPoint(32)['x'] <= tile.getRight()) || (player.getColPoint(33)['x'] >= tile.getLeft() && player.getColPoint(33)['x'] <= tile.getRight())){
 					// Check the players Y position with the tiles, it's no collision as long as the players Y position is lower the the ground top position
@@ -23,7 +24,13 @@ var checkCollision = function(){
 							player.stopFalling();
 						}
 					}
+					
+					// Check if je jumps or walks against a tile
+					if(player.getColPoint(12)['y'] <= tile.getColPoint(32)['y'] && tile.getColPoint(22)['y'] < player.getColPoint(22)['y']){
+						player.stopJump();
+					}
 				}
+				
 			}
 			
 			// Check collisions for active bullets
@@ -55,9 +62,9 @@ var checkCollision = function(){
 	
 	if(enemies != 0){
 		enemies.forEach(function(enemie){
-			if((enemie.X <= 1000 && enemie.X >= 0) && (enemie.X-player.X <= enemie.width && enemie.X-player.X >= -enemie.width)){
+			if((enemie.X <= 1000 && enemie.X >= 0) && (enemie.X-player.X <= enemie.width && enemie.X-player.X >= -enemie.width) && !enemie.dead){
 				if(player.getColPoint(22)['y'] >= enemie.getColPoint(12)['y'] && player.getColPoint(22)['y'] <= enemie.getColPoint(32)['y']){
-					player.hitByEnemy();
+					player.hitByEnemy(enemie);
 				}
 			}
 		});

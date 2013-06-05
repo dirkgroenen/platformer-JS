@@ -29,6 +29,9 @@ var player = new (function(){
 	obj.currentMovement = 'r';
 	obj.moveSpeed = 5;
 	obj.holdMovement = false;
+	obj.hasBounced = false;
+	obj.bounceSpeed = 1;
+	obj.bounceDirection = '';
 	
 	// Methods
 	obj.setPosition = function(x,y){
@@ -81,6 +84,12 @@ var player = new (function(){
 		
 		obj.allowedToMoveLeft = true;
 		obj.allowedToMoveRight = true;
+	}
+	
+	obj.stopJump = function(){
+		obj.isJumping = false;
+		obj.fallSpeed = 3;
+		obj.isFalling = true;
 	}
 	
 	// Methods for falling
@@ -143,6 +152,27 @@ var player = new (function(){
 		}
 	}
 	
+	obj.bounce = function(move){
+		obj.jump();
+		obj.hasBounced = true;
+		obj.bounceSpeed = 15;
+		obj.bounceDirection = move;
+	}
+	
+	obj.checkBounce = function(){
+		if(obj.hasBounced){
+			obj.bounceSpeed -= 1;
+			(obj.bounceDirection == 'l') ? obj.setPosition(obj.X-obj.bounceSpeed,obj.Y) : obj.setPosition(obj.X+obj.bounceSpeed,obj.Y);
+			(obj.bounceDirection == 'l') ? obj.allowedToMoveRight = false : obj.allowedToMoveLeft = false;
+		}
+		if(obj.bounceSpeed <= 0){
+			obj.hasBounced = false;
+		}
+		if(obj.bounceSpeed == 0 && !obj.isFalling){
+			obj.allowedToMoveRight = true;
+			obj.allowedToMoveLeft = true;
+		}
+	}
 	
 	obj.getColPoint = function(point){
 		cors = [];
@@ -193,8 +223,9 @@ var player = new (function(){
 	}
 	
 
-	obj.hitByEnemy = function(){
+	obj.hitByEnemy = function(enemy){
 		gameStats.lifes--;	
+		obj.bounce(enemy.currentMovement);
 	}
 });
 

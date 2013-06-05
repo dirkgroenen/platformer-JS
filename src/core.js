@@ -1,4 +1,4 @@
-var FPS = 30;
+var FPS = 25;
 var scrolled = 0;
 
 function drawMap(){
@@ -140,6 +140,7 @@ var GameLoop = function(){
 	// Check jump and fall of player
 	if(player.isJumping) player.checkJump();
 	if(player.isFalling) player.checkFall();
+	player.checkBounce();
 	
 	// Check the keyRegister for player movement
 	if(keyRegister[0] == 1) player.moveLeft();
