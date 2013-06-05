@@ -117,7 +117,8 @@ var drawBullets = function(){
 }
 
 var drawGameStats = function(){
-	gameStats.drawLifes();
+	gameStats.drawLives();
+	gameStats.drawPoints();
 }
 
 /* The most important part of the game: the GameLoop! */
@@ -136,7 +137,7 @@ var GameLoop = function(){
 		
 		// Draw the map and character
 		drawMap();
-		
+		player.draw();
 		drawEnemies();
 		
 		// Draw the game stats

@@ -4,11 +4,12 @@ var gameStats = new (function(){
 	
 	// Number of lifes
 	obj.lifes = 5;
+	obj.maxLives = 5;
 	// Draw lifes
-	obj.drawLifes = function(){
-		for(var x = 1;x <= obj.lifes;x++){
+	obj.drawLives = function(){
+		for(var x = 1;x <= obj.maxLives;x++){
 			var image = new Image();
-			image.src = 'graph/other/heart_full.png';
+			image.src = (x <= obj.lifes) ? 'graph/other/heart_full.png' : 'graph/other/heart_empty.png';
 			image.height = 16;
 			image.width = 16;
 			image.Y = 10;
@@ -21,6 +22,14 @@ var gameStats = new (function(){
 				
 			} catch(e){} // Do nothing
 		}
+	}
+	
+	// Draw the points
+	obj.drawPoints = function(){
+		ctx.font = "bold 15px arial";
+		ctx.fillStyle= "rgba(0,0,0,0.8)";
+		ctx.textAlign = 'right';
+		ctx.fillText("Points: "+obj.points, 880,23);
 	}
 	
 	// Level

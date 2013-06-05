@@ -26,6 +26,14 @@ var enemy = function(x,options){
 	obj.life = 3;
 	obj.dead = false;
 	
+	// Enemy details
+	switch(Number(options[1])){
+		case 1:
+			obj.points = 5;
+			break;
+	}
+	
+	
 	obj.waypointLeft = obj.startX-Number(options[0])*t_width;
 	obj.waypointRight = obj.startX+Number(options[2])*t_width;
 	obj.enemyType = Number(options[1]);
@@ -124,6 +132,7 @@ var enemy = function(x,options){
 	obj.hit = function(){
 		obj.life--;
 		obj.walkSpeed -= 0.5;
+		gameStats.points += obj.points;
 		return obj.life;
 	}
 }

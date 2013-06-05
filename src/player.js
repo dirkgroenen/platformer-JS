@@ -163,6 +163,9 @@ var player = new (function(){
 			(obj.currentMovement == 'r') ? obj.setPosition(obj.X-obj.bounceSpeed,obj.Y) : obj.setPosition(obj.X+obj.bounceSpeed,obj.Y);
 			(obj.currentMovement == 'r') ? obj.allowedToMoveRight = false : obj.allowedToMoveLeft = false;
 		}
+		if(obj.X <= 0){
+			obj.bounceSpeed = 0;
+		}
 		if(obj.bounceSpeed <= 0){
 			obj.hasBounced = false;
 		}
@@ -219,6 +222,7 @@ var player = new (function(){
 		bullets.push(new bullet(obj.getColPoint(22)['x'],obj.getColPoint(22)['y'],obj.currentMovement));
 		currentBullets++;
 		gameStats.bulletsFired++;
+		gameStats.points--;
 	}
 	
 

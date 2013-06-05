@@ -64,7 +64,7 @@ var checkCollision = function(){
 	
 	if(enemies != 0){
 		enemies.forEach(function(enemie){
-			if((enemie.X <= 1000 && enemie.X >= 0) && (enemie.X-player.X <= enemie.width && enemie.X-player.X >= -enemie.width) && !enemie.dead){
+			if((enemie.X <= 1000 && enemie.X >= 0) && ((enemie.X+15)-player.X <= enemie.width && (enemie.X-10)-player.X >= -enemie.width) && !enemie.dead){
 				if(player.getColPoint(22)['y'] >= enemie.getColPoint(12)['y'] && player.getColPoint(22)['y'] <= enemie.getColPoint(32)['y']){
 					player.hitByEnemy(enemie);
 				}
