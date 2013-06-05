@@ -22,6 +22,10 @@ var enemy = function(x,options){
 	obj.currentMovement = 'r';
 	obj.walkSpeed = 2;
 	
+	// Enemy life
+	obj.life = 3;
+	obj.dead = false;
+	
 	obj.waypointLeft = obj.startX-Number(options[0])*t_width;
 	obj.waypointRight = obj.startX+Number(options[2])*t_width;
 	obj.enemyType = Number(options[1]);
@@ -54,7 +58,13 @@ var enemy = function(x,options){
 	
 	// Create the method that will draw the tile on the given position
 	obj.draw = function(){
-		obj.image.src = 'graph/characters/dino/dinowalk_'+obj.currentMovement+'.png';
+		if(!obj.dead){
+			obj.image.src = 'graph/characters/dino/dinowalk_'+obj.currentMovement+'.png';
+		}
+		else{
+			obj.image.src = 'graph/characters/dino/dinodead.png';
+			obj.actualFrame = 0;
+		}
 		// Try and catch to prevent that a JS error will block the whole game
 		try{
 			// Draw the tile on the canvas
@@ -110,7 +120,12 @@ var enemy = function(x,options){
 		}
 		return cors;
 	}
-	
+
+	obj.hit = function(){
+		obj.life--;
+		obj.walkSpeed -= 0.5;
+		return obj.life;
+	}
 }
 
 	
@@ -134,7 +149,6 @@ var enemyGenerator = function(enemie_array){
 			enemie_options = String(enemie_array[x]).split('.');
 
 			enemies.push(new enemy(x*t_width,enemie_options));
-			console.log('Enemie at: '+x*t_width);
 		}
 	}
 	

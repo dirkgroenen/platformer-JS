@@ -53,8 +53,10 @@ var gravityCheck = function(){
 
 var drawEnemies = function(){
 	enemies.forEach(function(enemie){
-		enemie.walk();
-		enemie.draw();
+		if(!enemie.dead){
+			enemie.walk();
+		}
+			enemie.draw();
 	});
 }
 
@@ -98,6 +100,10 @@ var drawBullets = function(){
 	});
 }
 
+var drawGameStats = function(){
+	gameStats.drawLifes();
+}
+
 /* The most important part of the game: the GameLoop! */
 /* ! Needs to be placed at the bottom of the core file */
 // Set the frames per second (FPS)
@@ -115,6 +121,9 @@ var GameLoop = function(){
 	drawMap();
 	player.draw();
 	drawEnemies();
+	
+	// Draw the game stats
+	drawGameStats();
 	
 	// Check for collisions
 	checkCollision();

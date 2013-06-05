@@ -143,6 +143,7 @@ var player = new (function(){
 		}
 	}
 	
+	
 	obj.getColPoint = function(point){
 		cors = [];
 		switch(point){
@@ -189,6 +190,11 @@ var player = new (function(){
 	obj.shoot = function(){
 		bullets.push(new bullet(obj.getColPoint(22)['x'],obj.getColPoint(22)['y'],obj.currentMovement));
 		currentBullets++;
+	}
+	
+
+	obj.hitByEnemy = function(){
+		gameStats.lifes--;	
 	}
 });
 

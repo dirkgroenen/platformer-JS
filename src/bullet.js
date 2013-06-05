@@ -42,6 +42,7 @@ var bullet = function(x,y,direction){
 	
 	obj.remove = function(){
 		obj.image = null;
+		obj.active = false;
 		currentBullets--;
 	}
 };

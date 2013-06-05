@@ -29,16 +29,37 @@ var checkCollision = function(){
 			// Check collisions for active bullets
 			if(bullets.length != 0){
 				bullets.forEach(function(bullet){
-					if(bullet.active){
+					if((bullet.X >= 0 && bullet.X <= 1000)){
 						// Check for hit on rock
 						if(((bullet.X >= tile.getColPoint(11)['x']-bullet.width && bullet.X <= tile.getColPoint(11)['x']) || (bullet.X <= tile.getColPoint(11)['x']-bullet.width && bullet.X >= tile.getColPoint(13)['x'])) && (bullet.Y <= tile.getColPoint(31)['y'] && bullet.Y >= tile.getColPoint(11)['y'])){
 							bullet.remove();
-							bullet.active = false;
 						}
-						
+						// Check for hit with enemy
+						if(enemies != 0){
+							enemies.forEach(function(enemie){
+								if((enemie.X <= 1000 && enemie.X >= 0) && (bullet.X >= enemie.getColPoint(11)['x'] && bullet.X <= enemie.getColPoint(13)['x']) && bullet.active && !enemie.dead){
+									if(bullet.Y >= enemie.getColPoint(12)['y'] && bullet.Y <= enemie.getColPoint(32)['y']){
+										bullet.remove();
+										if(enemie.hit() <= 0){
+											enemie.dead = true;
+										}
+									}
+								}
+							});
+						}
 					}
 				});
 			}
 		});
 	}
+	
+	if(enemies != 0){
+		enemies.forEach(function(enemie){
+			if((enemie.X <= 1000 && enemie.X >= 0) && (enemie.X-player.X <= enemie.width && enemie.X-player.X >= -enemie.width)){
+				if(player.getColPoint(22)['y'] >= enemie.getColPoint(12)['y'] && player.getColPoint(22)['y'] <= enemie.getColPoint(32)['y']){
+					player.hitByEnemy();
+				}
+			}
+		});
+	}	
 };
