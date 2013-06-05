@@ -1,14 +1,3 @@
-// Set game canvas size: 1000 * 600 (px) and get the canvas
-var c_width = 1000, c_height = 600;
-c = document.getElementById("game");
-
-// Get the 2D graphic context to the canvas
-ctx = c.getContext("2d");
-
-// Set the height and width of the canvas
-c.height = c_height;
-c.width = c_width;
-
 // Canvas elelements can't move. We need to clear the canvas and draw the updated elements back.
 var clear = function(){
 	ctx.fillStyle = '#88f7ff'; // Draw the background color

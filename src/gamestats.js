@@ -29,4 +29,10 @@ var gameStats = new (function(){
 	// Points
 	obj.points = 0;
 	
+	// Bullets
+	obj.bulletsFired = 0;
+	obj.bulletsHit = 0;
+	
+	// Enemies
+	obj.enemiesKilled = 0;
 });

@@ -31,7 +31,6 @@ var player = new (function(){
 	obj.holdMovement = false;
 	obj.hasBounced = false;
 	obj.bounceSpeed = 1;
-	obj.bounceDirection = '';
 	
 	// Methods
 	obj.setPosition = function(x,y){
@@ -155,15 +154,14 @@ var player = new (function(){
 	obj.bounce = function(move){
 		obj.jump();
 		obj.hasBounced = true;
-		obj.bounceSpeed = 15;
-		obj.bounceDirection = move;
+		obj.bounceSpeed = 15;;
 	}
 	
 	obj.checkBounce = function(){
 		if(obj.hasBounced){
 			obj.bounceSpeed -= 1;
-			(obj.bounceDirection == 'l') ? obj.setPosition(obj.X-obj.bounceSpeed,obj.Y) : obj.setPosition(obj.X+obj.bounceSpeed,obj.Y);
-			(obj.bounceDirection == 'l') ? obj.allowedToMoveRight = false : obj.allowedToMoveLeft = false;
+			(obj.currentMovement == 'r') ? obj.setPosition(obj.X-obj.bounceSpeed,obj.Y) : obj.setPosition(obj.X+obj.bounceSpeed,obj.Y);
+			(obj.currentMovement == 'r') ? obj.allowedToMoveRight = false : obj.allowedToMoveLeft = false;
 		}
 		if(obj.bounceSpeed <= 0){
 			obj.hasBounced = false;
@@ -220,6 +218,7 @@ var player = new (function(){
 	obj.shoot = function(){
 		bullets.push(new bullet(obj.getColPoint(22)['x'],obj.getColPoint(22)['y'],obj.currentMovement));
 		currentBullets++;
+		gameStats.bulletsFired++;
 	}
 	
 

@@ -47,8 +47,10 @@ var checkCollision = function(){
 								if((enemie.X <= 1000 && enemie.X >= 0) && (bullet.X >= enemie.getColPoint(11)['x'] && bullet.X <= enemie.getColPoint(13)['x']) && bullet.active && !enemie.dead){
 									if(bullet.Y >= enemie.getColPoint(12)['y'] && bullet.Y <= enemie.getColPoint(32)['y']){
 										bullet.remove();
+										gameStats.bulletHit++;
 										if(enemie.hit() <= 0){
 											enemie.dead = true;
+											gameStats.enemiesKilled++;
 										}
 									}
 								}

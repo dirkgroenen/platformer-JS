@@ -1,6 +1,19 @@
 var FPS = 25;
 var scrolled = 0;
 
+/* INIT canvas */
+// Set game canvas size: 1000 * 600 (px) and get the canvas
+var c_width = 1000, c_height = 600;
+c = document.getElementById("game");
+
+// Get the 2D graphic context to the canvas
+ctx = c.getContext("2d");
+
+// Set the height and width of the canvas
+c.height = c_height;
+c.width = c_width;
+
+
 function drawMap(){
 	skyTiles.forEach(function(tile){
 		tile.draw();
@@ -18,6 +31,9 @@ document.onkeydown = function(event){
 	if(key == 38) keyRegister[1] = 1;
 	if(key == 39) keyRegister[2] = 1;
 	if(key >= 37 && key <= 39)	player.isMoving = true;
+	if(key == 27){
+		(!menu.menuOpened) ? menu.open() : menu.close();
+	}
 }
 
 document.onkeyup = function(event){
@@ -115,37 +131,39 @@ var GameLoop = function(){
 	lastLoop = thisLoop;
 	document.getElementById('fps').innerHTML = Math.round(fps);
 	
-	clear();
-	
-	// Draw the map and character
-	drawMap();
-	player.draw();
-	drawEnemies();
-	
-	// Draw the game stats
-	drawGameStats();
-	
-	// Check for collisions
-	checkCollision();
-	
-	// Check for gravity
-	gravityCheck();
-	
-	// Moving camera function
-	boxCameraCheck();
-	
-	// Draw bullets
-	drawBullets();
-	
-	// Check jump and fall of player
-	if(player.isJumping) player.checkJump();
-	if(player.isFalling) player.checkFall();
-	player.checkBounce();
-	
-	// Check the keyRegister for player movement
-	if(keyRegister[0] == 1) player.moveLeft();
-	if(keyRegister[1] == 1) player.jump();
-	if(keyRegister[2] == 1) player.moveRight();
+	if(!menu.menuOpened){
+		clear();
+		
+		// Draw the map and character
+		drawMap();
+		
+		drawEnemies();
+		
+		// Draw the game stats
+		drawGameStats();
+		
+		// Check for collisions
+		checkCollision();
+		
+		// Check for gravity
+		gravityCheck();
+		
+		// Moving camera function
+		boxCameraCheck();
+		
+		// Draw bullets
+		drawBullets();
+		
+		// Check jump and fall of player
+		if(player.isJumping) player.checkJump();
+		if(player.isFalling) player.checkFall();
+		player.checkBounce();
+		
+		// Check the keyRegister for player movement
+		if(keyRegister[0] == 1) player.moveLeft();
+		if(keyRegister[1] == 1) player.jump();
+		if(keyRegister[2] == 1) player.moveRight();
+	}
 	
 	// Repeat the loop over and over again.
 	gLoop = setTimeout(GameLoop,FPS);
