@@ -18,6 +18,9 @@ function drawMap(){
 	skyTiles.forEach(function(tile){
 		tile.draw();
 	});
+	decorObjects.forEach(function(object){
+		object.draw();
+	});
 	groundTiles.forEach(function(tile){
 		tile.draw();
 	});
@@ -72,7 +75,7 @@ var drawEnemies = function(){
 		if(!enemie.dead){
 			enemie.walk();
 		}
-			enemie.draw();
+		enemie.draw();
 	});
 }
 
@@ -97,6 +100,10 @@ var boxCameraCheck = function(){
 			enemie.changeWPs(player.moveSpeed);
 			enemie.setPosition(enemie.X-player.moveSpeed,enemie.Y);
 		});
+		
+		decorObjects.forEach(function(decor){
+			decor.setPosition(decor.X-player.moveSpeed,decor.Y);
+		})
 	}
 	else{
 		player.holdMovement = false;

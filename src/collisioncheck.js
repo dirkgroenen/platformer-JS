@@ -17,7 +17,7 @@ var checkCollision = function(){
 				
 				
 				// Check the tiles under the player's X
-				if((player.getColPoint(32)['x'] >= tile.getLeft() && player.getColPoint(32)['x'] <= tile.getRight()) || (player.getColPoint(33)['x'] >= tile.getLeft() && player.getColPoint(33)['x'] <= tile.getRight())){
+				if((player.getColPoint(32)['x'] >= tile.getColPoint(11)['x'] && player.getColPoint(32)['x'] <= tile.getColPoint(13)['x']) || (player.getColPoint(33)['x'] >= tile.getColPoint(11)['x'] && player.getColPoint(33)['x'] <= tile.getColPoint(13)['x'])){
 					// Check the players Y position with the tiles, it's no collision as long as the players Y position is lower the the ground top position
 					if((player.getColPoint(32)['y'] >= tile.getColPoint(12)['y']) || (player.getColPoint(31)['y'] >= tile.getColPoint(11)['y']) || (player.getColPoint(33)['y'] >= tile.getColPoint(13)['y'])){
 						if(tile.getColPoint(12)['y'] > player.getColPoint(21)['y']){

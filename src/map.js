@@ -11,6 +11,7 @@ var clear = function(){
 t_width = 50, t_height = 50;
 var skyTiles = [];
 var groundTiles = [];
+var decorObjects = [];
 var gameWidth = 0;
 
 // Create the sky
@@ -57,10 +58,19 @@ var groundTile = function(xpos,ypos,type){
 	
 	// There are three sky tiles. Get a random tile
 	obj.image.src = "graph/ground/"+type+".png";
+	
+	switch(type){
+		case 'bridge':
+			obj.height = 17;
+			obj.width = 50;
+			break;
+		default:
+			obj.height = t_height;
+			obj.width = t_width;
+			break;
+	}
 		
 	// Give position to image object	
-	obj.height = t_height;
-	obj.width = t_width;
 	obj.X = xpos;
 	obj.Y = ypos;
 	
@@ -72,25 +82,6 @@ var groundTile = function(xpos,ypos,type){
 			// drawImage(Image Object, source X, source Y, source Width, source Height, destination X (X position), destination Y (Y position), Destination width, Destination height)
 			ctx.drawImage(obj.image, obj.X, obj.Y, obj.width, obj.height);
 		} catch(e){} // Do nothing
-	}
-	
-	// Create an collision function
-	obj.onCollide = function(){
-		
-	}
-	
-	// Return top of the tile
-	obj.getTop = function(){
-		return obj.Y;
-	}
-	obj.getBottom = function(){
-		return obj.Y-obj.height;
-	}
-	obj.getLeft = function(){
-		return obj.X;
-	}
-	obj.getRight = function(){
-		return obj.X + obj.width;
 	}
 	
 	obj.getColPoint = function(point){
@@ -144,6 +135,115 @@ var groundTile = function(xpos,ypos,type){
 	return obj;
 }
 
+// Create mab object
+var decorObject = function(x,y,type){
+	var obj = this;
+
+	// Assign image and other vars
+	obj.image = new Image();
+	obj.X = x;
+	obj.Y = y;
+	obj.canFly = false;
+	
+	/* All object numbers have their own image and sizes */
+	/* 	11 : hill_short
+	*	12 : hill_long
+	*	13 : shroom
+	*	14 : spikes
+	*/
+	switch(type){
+		case 11:
+			obj.image.src = 'graph/hill_short.png';
+			obj.height = 106;
+			obj.width = 50;
+		break;
+		case 12:
+			obj.height = 152;
+			obj.width = 50;
+			obj.image.src = 'graph/hill_long.png';
+		case 13:
+			obj.height = 44;
+			obj.width = 50;
+			obj.image.src = 'graph/shroom.png';
+		break;
+	}
+	
+	obj.setPosition = function(x,y){
+		obj.X = x;
+		obj.Y = y;
+	}
+	
+	// Draw function
+	obj.draw = function(){
+		// Try and catch to prevent that a JS error will block the whole game
+		try{
+			// Draw the tile on the canvas
+			// drawImage(Image Object, source X, source Y, source Width, source Height, destination X (X position), destination Y (Y position), Destination width, Destination height)
+			ctx.drawImage(obj.image, 0, 0, obj.width, obj.height, obj.X, obj.Y, obj.width, obj.height);
+			
+		} catch(e){console.log(e)} // Do nothing
+		
+		if(!obj.canFly) obj.placeInField();
+	}
+		
+	obj.getColPoint = function(point){
+		cors = [];
+		switch(point){
+			case 11:
+				cors['x'] = obj.X;
+				cors['y'] = obj.Y;
+				break;
+			case 12:
+				cors['x'] = obj.X+(obj.width/2);
+				cors['y'] = obj.Y;
+				break;
+			case 13:
+				cors['x'] = obj.X+obj.width;
+				cors['y'] = obj.Y;
+				break;
+			case 21:
+				cors['x'] = obj.X;
+				cors['y'] = obj.Y+(obj.height/2);
+				break;
+			case 22:
+				cors['x'] = obj.X+(obj.width/2);
+				cors['y'] = obj.Y+(obj.height/2);
+				break;
+			case 23:
+				cors['x'] = obj.X+obj.width;
+				cors['y'] = obj.Y+(obj.height/2);
+				break;
+			case 31:
+				cors['x'] = obj.X;
+				cors['y'] = obj.Y+obj.height;
+				break;
+			case 32:
+				cors['x'] = obj.X+(obj.width/2);
+				cors['y'] = obj.Y+obj.height;
+				break;
+			case 33:
+				cors['x'] = obj.X+obj.width;
+				cors['y'] = obj.Y+obj.height;
+				break;
+		}
+		return cors;
+	}	
+		
+	// Search for the nearest block to stand on
+	obj.placeInField = function(){
+		startPos = 0;
+		groundTiles.some(function(tile){
+			// Check for tiles below the player
+			if((tile.getColPoint(11)['x'] <= obj.getColPoint(32)['x'] && tile.getColPoint(13)['x'] >= obj.getColPoint(32)['x'])){
+				startPos = tile.getColPoint(11)['y'];
+				return true;
+			}
+		});
+		
+		obj.setPosition(obj.X,startPos-obj.height);
+	};
+}
+
 var generateMap = function(map_array){
 	var xCor = 0,yCor = 0;
 	
@@ -158,17 +258,22 @@ var generateMap = function(map_array){
 			// Check which tile needs to be drawn
 			switch(map_array[x][y]){
 				case 0:
-					skyTiles[xCor+yCor/50] = new skyTile(xCor,yCor);
+					skyTiles.push(new skyTile(xCor,yCor));
 					break;
 				case 1:
-					groundTiles[xCor+yCor/50] = new groundTile(xCor,yCor,"ground_dirt");
+					groundTiles.push(new groundTile(xCor,yCor,"ground_dirt"));
 					break;
 				case 2:
-					groundTiles[xCor+yCor/50] = new groundTile(xCor,yCor,"ground");
+					groundTiles.push(new groundTile(xCor,yCor,"ground"));
+					break;
+				case 3:
+					groundTiles.push(new groundTile(xCor,yCor,"bridge"));
+					break;
+				default:
+					decorObjects.push(new decorObject(xCor,yCor,map_array[x][y]));
 					break;
 			}
 		}
-		
 		gameWidth = map_array[x].length*t_width;
 	}
 };
