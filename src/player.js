@@ -4,17 +4,17 @@ var player = new (function(){
 	var obj = this;
 	
 	// preload images
-	new Image().src = 'graph/characters/Robo/robowalk_l.png';
+	new Image().src = 'graph/character/walksheet_l.png';
 	
 	// create the image
 	obj.image = new Image();
-	obj.width = 40;
-	obj.height = 57;
+	obj.width = 50;
+	obj.height = 64;
 	obj.X = 0;
 	obj.Y = 0;
 	
 	// Walk animation vars, interval prevents that every interval has a new animation
-	obj.frames = 3;
+	obj.frames = 10;
     obj.actualFrame = 0;
     obj.interval = 0;
 	
@@ -40,15 +40,18 @@ var player = new (function(){
 	
 	// Create the method that will draw the tile on the given position
 	obj.draw = function(){
-		obj.image.src = 'graph/characters/Robo/robowalk_'+obj.currentMovement+'.png';
+		obj.image.src = 'graph/character/walksheet_'+obj.currentMovement+'.png';
 		// Try and catch to prevent that a JS error will block the whole game
+		if(!obj.isMoving) obj.actualFrame = 0;
+		
+		
 		try{
 			// Draw the tile on the canvas
 			// drawImage(Image Object, source X, source Y, source Width, source Height, destination X (X position), destination Y (Y position), Destination width, Destination height)
 			ctx.drawImage(obj.image, 0, obj.height * obj.actualFrame, obj.width, obj.height, obj.X, obj.Y, obj.width, obj.height);
 		} catch(e){} // Do nothing
 		
-		if (obj.interval == 6 ) {
+		if (obj.interval == 1 ) {
             (obj.actualFrame == obj.frames) ? obj.actualFrame = 0 : obj.actualFrame++;
 			obj.interval = 0;
 		}
@@ -243,5 +246,5 @@ var placePlayerInField = function(){
 		}
 	});
 	
-	player.setPosition(0,startPos-player.height+5);
+	player.setPosition(0,startPos-player.height);
 };

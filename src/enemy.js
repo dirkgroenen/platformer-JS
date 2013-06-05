@@ -5,20 +5,15 @@ var enemy = function(x,options){
 	var obj = this;
 	
 	// preload images
-	new Image().src = 'graph/characters/dino/dinowalk_l.png';
+	new Image().src = 'graph/enemies/slime_walk_l.png';
 	
 	// create the image
 	obj.image = new Image();
-	obj.width = 50;
-	obj.height = 63;
 	obj.X = x;
 	obj.Y = 0;
 	obj.startX = x;
 	
 	// Walk animation vars, interval prevents that every interval has a new animation
-	obj.frames = 1;
-    obj.actualFrame = 0;
-    obj.interval = 0;
 	obj.currentMovement = 'r';
 	obj.walkSpeed = 2;
 	
@@ -29,7 +24,9 @@ var enemy = function(x,options){
 	// Enemy details
 	switch(Number(options[1])){
 		case 1:
-			obj.points = 5;
+			obj.points = 5;	
+			obj.width = 50;
+			obj.height = 33;
 			break;
 	}
 	
@@ -67,23 +64,17 @@ var enemy = function(x,options){
 	// Create the method that will draw the tile on the given position
 	obj.draw = function(){
 		if(!obj.dead){
-			obj.image.src = 'graph/characters/dino/dinowalk_'+obj.currentMovement+'.png';
+			obj.image.src = 'graph/enemies/slime_walk_'+obj.currentMovement+'.png';
 		}
 		else{
-			obj.image.src = 'graph/characters/dino/dinodead.png';
-			obj.actualFrame = 0;
+			obj.image.src = 'graph/enemies/slime_dead.png';
 		}
 		// Try and catch to prevent that a JS error will block the whole game
 		try{
 			// Draw the tile on the canvas
 			// drawImage(Image Object, source X, source Y, source Width, source Height, destination X (X position), destination Y (Y position), Destination width, Destination height)
-			ctx.drawImage(obj.image, 0, obj.height * obj.actualFrame, obj.width, obj.height, obj.X, obj.Y, obj.width, obj.height);
+			ctx.drawImage(obj.image, 0, 0, obj.width, obj.height, obj.X, obj.Y, obj.width, obj.height);
 		} catch(e){} // Do nothing
-		
-		if (obj.interval == 6 ) {
-            (obj.actualFrame == obj.frames) ? obj.actualFrame = 0 : obj.actualFrame++;
-			obj.interval = 0;
-		}
 	}
 	
 	obj.getColPoint = function(point){
@@ -149,7 +140,7 @@ var placeEnemyInField = function(enemy){
 		}
 	});
 	
-	enemy.setPosition(enemy.X,startPos-enemy.height+5);
+	enemy.setPosition(enemy.X,startPos-enemy.height);
 };
 
 var enemyGenerator = function(enemie_array){

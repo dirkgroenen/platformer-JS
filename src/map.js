@@ -19,13 +19,14 @@ var skyTile = function(xpos,ypos){
 	// Create the image object and set it's height and width
 	obj.image = new Image();
 	// There are three sky tiles. Get a random tile
-	random_num = Math.floor((Math.random()*10)+1); // Random number
-	if(random_num > 0 && random_num <= 8) obj.image.src = "graph/tiles/sky_2.png";
-	if(random_num == 9) obj.image.src = "graph/tiles/sky_0.png";
-	if(random_num == 10) obj.image.src = "graph/tiles/sky_3.png";
+	random_num = Math.floor((Math.random()*20)+1); // Random number
+	if(random_num == 1) obj.image.src = "graph/clouds/cloud_1.png";
+	else if(random_num == 2) obj.image.src = "graph/clouds/cloud_2.png";
+	else if(random_num == 3) obj.image.src = "graph/clouds/cloud_3.png";
+	else  obj.image.src = "graph/clouds/empty.png";
 	
 	// Give position to image object	
-	obj.height = t_height;
+	obj.height = 25;
 	obj.width = t_width;
 	obj.X = xpos;
 	obj.Y = ypos;
@@ -55,9 +56,7 @@ var groundTile = function(xpos,ypos,type){
 	obj.image = new Image();
 	
 	// There are three sky tiles. Get a random tile
-	random_num = Math.floor((Math.random()*2)+1); // Random number
-	if(random_num == 1) obj.image.src = "graph/tiles/"+type+"_1.png";
-	if(random_num == 2) obj.image.src = "graph/tiles/"+type+"_0.png";
+	obj.image.src = "graph/ground/"+type+".png";
 		
 	// Give position to image object	
 	obj.height = t_height;
@@ -162,10 +161,10 @@ var generateMap = function(map_array){
 					skyTiles[xCor+yCor/50] = new skyTile(xCor,yCor);
 					break;
 				case 1:
-					groundTiles[xCor+yCor/50] = new groundTile(xCor,yCor,"dirt");
+					groundTiles[xCor+yCor/50] = new groundTile(xCor,yCor,"ground_dirt");
 					break;
 				case 2:
-					groundTiles[xCor+yCor/50] = new groundTile(xCor,yCor,"dirt_rock");
+					groundTiles[xCor+yCor/50] = new groundTile(xCor,yCor,"ground");
 					break;
 			}
 		}

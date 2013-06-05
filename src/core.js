@@ -90,7 +90,7 @@ var boxCameraCheck = function(){
 			tile.setPosition(tile.X-player.moveSpeed,tile.Y);
 		});
 		skyTiles.forEach(function(tile){
-			tile.setPosition(tile.X-player.moveSpeed/1.5,tile.Y);
+			tile.setPosition(tile.X-player.moveSpeed/2.5,tile.Y);
 		});
 		
 		enemies.forEach(function(enemie){
