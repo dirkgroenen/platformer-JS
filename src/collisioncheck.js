@@ -12,9 +12,6 @@
 // CheckObject(o1,02)
 // o1 = Object 1, usually the player
 // o2 = Object 2, usually the tile or enemy
-var checkObjects = function(o1, o2){
-	
-}
 
 var checkCollision = function(){
 	// Check if there is a box on his head or under his ass
@@ -25,29 +22,33 @@ var checkCollision = function(){
 				// Check for tiles on the right side
 				if((player.getColPoint(23)['y'] <= tile.getColPoint(31)['y'] && player.getColPoint(23)['y'] >= tile.getColPoint(11)['y'])){
 					// Check the players Y position with the tiles, it's no collision as long as the players Y position is lower the the ground top position
-					if((player.getColPoint(23)['x'] >= tile.getColPoint(21)['x'] && player.getColPoint(22)['x'] <= tile.getColPoint(23)['x']) || (player.getColPoint(21)['x'] <= tile.getColPoint(23)['x'] && player.getColPoint(22)['x'] >= tile.getColPoint(23)['x'])){
-						player.stopMoving();
+					if((player.getColPoint(23)['x'] >= tile.getColPoint(21)['x'] && player.getColPoint(22)['x'] <= tile.getColPoint(23)['x'])){
+						player.stopMoving('r');
+						player.stopCamera = true;
+					}
+					if((player.getColPoint(21)['x'] <= tile.getColPoint(23)['x'] && player.getColPoint(22)['x'] >= tile.getColPoint(23)['x'])){
+						player.stopMoving('l');
 						player.stopCamera = true;
 					}
 				}
 				
 				
 				// Check the tiles under the player's X
-				if((player.getColPoint(32)['x'] >= tile.getColPoint(11)['x'] && player.getColPoint(32)['x'] <= tile.getColPoint(13)['x']) || (player.getColPoint(33)['x']-20 >= tile.getColPoint(11)['x'] && player.getColPoint(33)['x']-20 <= tile.getColPoint(13)['x']) || (player.getColPoint(31)['x']+20 >= tile.getColPoint(11)['x'] && player.getColPoint(31)['x']+20 <= tile.getColPoint(13)['x'])){
-					// Check the players Y position with the tiles, it's no collision as long as the players Y position is lower the the ground top position
-					if(((player.getColPoint(32)['y'] >= tile.getColPoint(12)['y']) || (player.getColPoint(31)['y'] >= tile.getColPoint(11)['y']) || (player.getColPoint(33)['y'] >= tile.getColPoint(13)['y'])) && player.isFalling){
-						if(tile.getColPoint(12)['y'] > player.getColPoint(21)['y']){
-							(player.getColPoint(31)['y'] - tile.getColPoint(11)['y'] > 5) ? player.stopFalling(tile.getColPoint(11)['y']) : player.stopFalling(null);
-							
+				if(player.isFalling || player.isJumping){
+					if((player.getColPoint(32)['x'] >= tile.getColPoint(11)['x'] && player.getColPoint(32)['x'] <= tile.getColPoint(13)['x']) || (player.getColPoint(33)['x']-20 >= tile.getColPoint(11)['x'] && player.getColPoint(33)['x']-20 <= tile.getColPoint(13)['x']) || (player.getColPoint(31)['x']+20 >= tile.getColPoint(11)['x'] && player.getColPoint(31)['x']+20 <= tile.getColPoint(13)['x'])){
+						// Check the players Y position with the tiles, it's no collision as long as the players Y position is lower the the ground top position
+						if(((player.getColPoint(32)['y'] >= tile.getColPoint(12)['y']) || (player.getColPoint(31)['y'] >= tile.getColPoint(11)['y']) || (player.getColPoint(33)['y'] >= tile.getColPoint(13)['y'])) && player.isFalling){
+							if(tile.getColPoint(12)['y'] > player.getColPoint(21)['y']){
+								(player.getColPoint(31)['y'] - tile.getColPoint(11)['y'] > 5) ? player.stopFalling(tile.getColPoint(11)['y']) : player.stopFalling(null);
+							}
+						}
+						
+						// Check if je jumps or walks against a tile
+						if((player.getColPoint(12)['y'] <= tile.getColPoint(32)['y'] && tile.getColPoint(22)['y'] < player.getColPoint(12)['y'])){
+							player.stopJump();
 						}
 					}
-					
-					// Check if je jumps or walks against a tile
-					if((player.getColPoint(12)['y'] <= tile.getColPoint(32)['y'] && tile.getColPoint(22)['y'] < player.getColPoint(12)['y'])){
-						player.stopJump();
-					}
 				}
-				
 			}
 			
 			// Check collisions for active bullets
@@ -82,7 +83,7 @@ var checkCollision = function(){
 	if(enemies != 0){
 		enemies.forEach(function(enemie){
 			if((enemie.X <= 1000 && enemie.X >= 0) && ((enemie.X+15)-player.X <= enemie.width && (enemie.X-10)-player.X >= -enemie.width) && !enemie.dead){
-				if(player.getColPoint(22)['y'] >= enemie.getColPoint(12)['y'] && player.getColPoint(22)['y'] <= enemie.getColPoint(32)['y']){
+				if((player.getColPoint(22)['y'] >= enemie.getColPoint(12)['y'] && player.getColPoint(22)['y'] <= enemie.getColPoint(32)['y']) || (player.getColPoint(12)['y'] >= enemie.getColPoint(12)['y'] && player.getColPoint(12)['y'] <= enemie.getColPoint(32)['y']) || (player.getColPoint(32)['y'] >= enemie.getColPoint(12)['y'] && player.getColPoint(32)['y'] <= enemie.getColPoint(32)['y'])){
 					player.hitByEnemy(enemie);
 				}
 			}

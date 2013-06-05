@@ -86,6 +86,7 @@ var player = new (function(){
 		
 		obj.allowedToMoveLeft = true;
 		obj.allowedToMoveRight = true;
+		obj.holdMovement = false;
 	}
 	
 	obj.stopJump = function(){
@@ -129,7 +130,7 @@ var player = new (function(){
 	}
 	
 	obj.moveRight = function(){
-		if(obj.X < c_width - obj.width && obj.allowedToMoveRight && !obj.holdMovement){
+		if(obj.X < c_width - obj.width && obj.allowedToMoveRight){
 			obj.setPosition(obj.X + obj.moveSpeed,obj.Y);
 			obj.allowedToMoveLeft = true;
 			obj.currentMovement = 'r';
@@ -143,9 +144,9 @@ var player = new (function(){
 		if(y != null) obj.Y = y-obj.height;
 	}
 	
-	obj.stopMoving = function(){
+	obj.stopMoving = function(blockpos){
 		obj.actualFrame = 0;
-		switch(obj.currentMovement){
+		switch(blockpos){
 			case 'l':
 				obj.allowedToMoveLeft = false;
 				break;
@@ -165,8 +166,6 @@ var player = new (function(){
 	obj.checkBounce = function(){
 		if(obj.hasBounced){
 			var enemy = obj.lastEnemyContact;
-			obj.allowedToMoveLeft = false;
-			obj.allowedToMoveRight = false;
 			obj.bounceSpeed -= 1;
 			
 			if(obj.currentMovement == 'r'){
@@ -181,10 +180,6 @@ var player = new (function(){
 		}
 		if(obj.bounceSpeed <= 0){
 			obj.hasBounced = false;
-		}
-		if(obj.bounceSpeed == 0 && !obj.isFalling){
-			obj.allowedToMoveRight = true;
-			obj.allowedToMoveLeft = true;
 		}
 	}
 	

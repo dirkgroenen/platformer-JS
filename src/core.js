@@ -59,7 +59,7 @@ var gravityCheck = function(){
 	if(player.isMoving){
 		groundTiles.some(function(tile){
 			// Check for tiles below the player
-			if((player.getColPoint(32)['x'] >= tile.getColPoint(11)['x'] && player.getColPoint(32)['x'] <= tile.getColPoint(13)['x']) || (player.getColPoint(33)['x']-20 >= tile.getColPoint(11)['x'] && player.getColPoint(33)['x']-20 <= tile.getColPoint(13)['x']) || (player.getColPoint(31)['x']+20 >= tile.getColPoint(11)['x'] && player.getColPoint(31)['x']+20 <= tile.getColPoint(13)['x'])){
+			if(((player.getColPoint(32)['x'] >= tile.getColPoint(11)['x'] && player.getColPoint(32)['x'] <= tile.getColPoint(13)['x']) || (player.getColPoint(33)['x']-20 >= tile.getColPoint(11)['x'] && player.getColPoint(33)['x']-20 <= tile.getColPoint(13)['x']) || (player.getColPoint(31)['x']+20 >= tile.getColPoint(11)['x'] && player.getColPoint(31)['x']+20 <= tile.getColPoint(13)['x'])) && player.getColPoint(22)['y'] < tile.getColPoint(32)['y']){
 				blockheight = tile.getColPoint(11)['y'];
 				return true;
 			}
@@ -88,7 +88,7 @@ placePlayerInField(); // After generating the map: place player in field
 var boxCameraCheck = function(){
 	if(player.isMoving && player.X > c_width*0.5 && !player.stopCamera && scrolled < gameWidth-c_width){
 		scrolled += player.moveSpeed;
-		player.holdMovement = true;
+		player.allowedToMoveRight = false;
 		
 		groundTiles.forEach(function(tile){
 			tile.setPosition(tile.X-player.moveSpeed,tile.Y);

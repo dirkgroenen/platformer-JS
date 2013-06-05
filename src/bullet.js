@@ -7,8 +7,8 @@ var bullet = function(x,y,direction){
 	var obj = this;
 	
 	// create the bullet information
-	obj.width = 15;
-	obj.height = 15;
+	obj.width = 5;
+	obj.height = 5;
 	obj.X = x;
 	obj.Y = y;
 	obj.bulletSpeed = 10;
