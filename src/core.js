@@ -59,7 +59,7 @@ var gravityCheck = function(){
 	if(player.isMoving){
 		groundTiles.some(function(tile){
 			// Check for tiles below the player
-			if((tile.getColPoint(11)['x'] <= player.getColPoint(32)['x'] && tile.getColPoint(13)['x'] >= player.getColPoint(32)['x']) && tile.getColPoint(11)['y'] > player.getColPoint(21)['y']){
+			if((player.getColPoint(32)['x'] >= tile.getColPoint(11)['x'] && player.getColPoint(32)['x'] <= tile.getColPoint(13)['x']) || (player.getColPoint(33)['x']-20 >= tile.getColPoint(11)['x'] && player.getColPoint(33)['x']-20 <= tile.getColPoint(13)['x']) || (player.getColPoint(31)['x']+20 >= tile.getColPoint(11)['x'] && player.getColPoint(31)['x']+20 <= tile.getColPoint(13)['x'])){
 				blockheight = tile.getColPoint(11)['y'];
 				return true;
 			}
@@ -78,6 +78,7 @@ var drawEnemies = function(){
 		enemie.draw();
 	});
 }
+
 
 // !! Generatemap creates  the gameWidth which is needed when generating a moving camera !! //
 generateMap(level_1['map']); // Code that selects the level, at the moment hard coded level 1
@@ -121,6 +122,7 @@ var drawBullets = function(){
 			bullet.remove();
 		}
 	});
+	if(bullets.length == 0) bullets = new Array();
 }
 
 var drawGameStats = function(){

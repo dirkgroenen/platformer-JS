@@ -4,9 +4,6 @@ var enemy = function(x,options){
 	// Create a new object based on functions
 	var obj = this;
 	
-	// preload images
-	new Image().src = 'graph/enemies/slime_walk_l.png';
-	
 	// create the image
 	obj.image = new Image();
 	obj.X = x;
@@ -15,20 +12,39 @@ var enemy = function(x,options){
 	
 	// Walk animation vars, interval prevents that every interval has a new animation
 	obj.currentMovement = 'r';
-	obj.walkSpeed = 2;
+	
+	// Walk animation vars, interval prevents that every interval has a new animation
+	obj.frames = 1;
+    obj.actualFrame = 0;
+    obj.interval = 0;
 	
 	// Enemy life
-	obj.life = 3;
 	obj.dead = false;
 	
 	// Enemy details
 	switch(Number(options[1])){
 		case 1:
-			obj.points = 5;	
+			obj.points = 2;	
 			obj.width = 50;
 			obj.height = 33;
+			obj.imageSourceName = 'slime';
+			obj.blocksAboveGround = 0;
+			obj.life = 3;
+			obj.walkSpeed = 2;
+			break;
+		case 2:
+			obj.points = 5;	
+			obj.width = 50;
+			obj.height = 23;
+			obj.life = 1;
+			obj.imageSourceName = 'fly';
+			obj.blocksAboveGround = options[3];
+			obj.walkSpeed = 3;
 			break;
 	}
+	
+	// Preload images
+	new Image().src = 'graph/enemies/'+obj.imageSourceName+'_l.png';
 	
 	
 	obj.waypointLeft = obj.startX-Number(options[0])*t_width;
@@ -64,17 +80,28 @@ var enemy = function(x,options){
 	// Create the method that will draw the tile on the given position
 	obj.draw = function(){
 		if(!obj.dead){
-			obj.image.src = 'graph/enemies/slime_walk_'+obj.currentMovement+'.png';
+			obj.image.src = 'graph/enemies/'+obj.imageSourceName+'_'+obj.currentMovement+'.png';
 		}
 		else{
-			obj.image.src = 'graph/enemies/slime_dead.png';
+			obj.image.src = 'graph/enemies/'+obj.imageSourceName+'_dead.png';
+			if(obj.Y < c_height && obj.blocksAboveGround != 0){
+				obj.Y += 10;
+			}
 		}
 		// Try and catch to prevent that a JS error will block the whole game
 		try{
 			// Draw the tile on the canvas
 			// drawImage(Image Object, source X, source Y, source Width, source Height, destination X (X position), destination Y (Y position), Destination width, Destination height)
-			ctx.drawImage(obj.image, 0, 0, obj.width, obj.height, obj.X, obj.Y, obj.width, obj.height);
+			ctx.drawImage(obj.image, 0, obj.height * obj.actualFrame, obj.width, obj.height, obj.X, obj.Y, obj.width, obj.height);
 		} catch(e){} // Do nothing
+		
+		if (obj.interval == 8) {
+            (obj.actualFrame == obj.frames) ? obj.actualFrame = 0 : obj.actualFrame++;
+			obj.interval = 0;
+		}
+		if(obj.isMoving){
+			obj.interval++;
+		}
 	}
 	
 	obj.getColPoint = function(point){
@@ -140,18 +167,20 @@ var placeEnemyInField = function(enemy){
 		}
 	});
 	
-	enemy.setPosition(enemy.X,startPos-enemy.height);
+	enemy.setPosition(enemy.X,(startPos-enemy.height)-enemy.blocksAboveGround*t_height);
 };
 
 var enemyGenerator = function(enemie_array){
-	for(var x = 0;x < enemie_array.length;x++){
-		if(enemie_array[x] != 0){
-			enemie_options = String(enemie_array[x]).split('.');
+	for(var y = 0;y < enemie_array.length;y++){
+		for(var x = 0;x < enemie_array[y].length;x++){
+			if(enemie_array[y][x] != 0){
+				enemie_options = String(enemie_array[y][x]).split('.');
 
-			enemies.push(new enemy(x*t_width,enemie_options));
+				enemies.push(new enemy(x*t_width,enemie_options));
+			}
 		}
 	}
-	
+		
 	enemies.forEach(function(enemy){
 		placeEnemyInField(enemy);
 	});

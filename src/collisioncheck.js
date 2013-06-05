@@ -2,6 +2,20 @@
 // Player getColPoint([1-3][1-3]):
 // 1:[1-3]: top, middle, bottom
 // 2:[1-3] left, middle, right
+//
+//	11--12--13
+//	|	|	|
+//	21--22--23
+//	|	|	|
+//	31--32--33
+
+// CheckObject(o1,02)
+// o1 = Object 1, usually the player
+// o2 = Object 2, usually the tile or enemy
+var checkObjects = function(o1, o2){
+	
+}
+
 var checkCollision = function(){
 	// Check if there is a box on his head or under his ass
 	if(bullets.length != 0 || player.isMoving || player.isFalling || player.isJumping){
@@ -9,24 +23,27 @@ var checkCollision = function(){
 			// Check for a box on the left or right
 			if(player.isMoving || player.isFalling || player.isJumping){
 				// Check for tiles on the right side
-				if(((player.getColPoint(23)['x'] >= tile.getColPoint(21)['x'] && player.getColPoint(22)['x'] <= tile.getColPoint(23)['x']) || (player.getColPoint(21)['x'] <= tile.getColPoint(23)['x'] && player.getColPoint(22)['x'] >= tile.getColPoint(23)['x'])) && (player.getColPoint(23)['y'] <= tile.getColPoint(31)['y'] && player.getColPoint(23)['y'] >= tile.getColPoint(11)['y'])){
+				if((player.getColPoint(23)['y'] <= tile.getColPoint(31)['y'] && player.getColPoint(23)['y'] >= tile.getColPoint(11)['y'])){
 					// Check the players Y position with the tiles, it's no collision as long as the players Y position is lower the the ground top position
-					player.stopMoving();
-					player.stopCamera = true;
+					if((player.getColPoint(23)['x'] >= tile.getColPoint(21)['x'] && player.getColPoint(22)['x'] <= tile.getColPoint(23)['x']) || (player.getColPoint(21)['x'] <= tile.getColPoint(23)['x'] && player.getColPoint(22)['x'] >= tile.getColPoint(23)['x'])){
+						player.stopMoving();
+						player.stopCamera = true;
+					}
 				}
 				
 				
 				// Check the tiles under the player's X
-				if((player.getColPoint(32)['x'] >= tile.getColPoint(11)['x'] && player.getColPoint(32)['x'] <= tile.getColPoint(13)['x']) || (player.getColPoint(33)['x'] >= tile.getColPoint(11)['x'] && player.getColPoint(33)['x'] <= tile.getColPoint(13)['x'])){
+				if((player.getColPoint(32)['x'] >= tile.getColPoint(11)['x'] && player.getColPoint(32)['x'] <= tile.getColPoint(13)['x']) || (player.getColPoint(33)['x']-20 >= tile.getColPoint(11)['x'] && player.getColPoint(33)['x']-20 <= tile.getColPoint(13)['x']) || (player.getColPoint(31)['x']+20 >= tile.getColPoint(11)['x'] && player.getColPoint(31)['x']+20 <= tile.getColPoint(13)['x'])){
 					// Check the players Y position with the tiles, it's no collision as long as the players Y position is lower the the ground top position
-					if((player.getColPoint(32)['y'] >= tile.getColPoint(12)['y']) || (player.getColPoint(31)['y'] >= tile.getColPoint(11)['y']) || (player.getColPoint(33)['y'] >= tile.getColPoint(13)['y'])){
+					if(((player.getColPoint(32)['y'] >= tile.getColPoint(12)['y']) || (player.getColPoint(31)['y'] >= tile.getColPoint(11)['y']) || (player.getColPoint(33)['y'] >= tile.getColPoint(13)['y'])) && player.isFalling){
 						if(tile.getColPoint(12)['y'] > player.getColPoint(21)['y']){
-							player.stopFalling();
+							(player.getColPoint(31)['y'] - tile.getColPoint(11)['y'] > 5) ? player.stopFalling(tile.getColPoint(11)['y']) : player.stopFalling(null);
+							
 						}
 					}
 					
 					// Check if je jumps or walks against a tile
-					if(player.getColPoint(12)['y'] <= tile.getColPoint(32)['y'] && tile.getColPoint(22)['y'] < player.getColPoint(22)['y']){
+					if((player.getColPoint(12)['y'] <= tile.getColPoint(32)['y'] && tile.getColPoint(22)['y'] < player.getColPoint(12)['y'])){
 						player.stopJump();
 					}
 				}

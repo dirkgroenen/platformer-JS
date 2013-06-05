@@ -31,6 +31,7 @@ var player = new (function(){
 	obj.holdMovement = false;
 	obj.hasBounced = false;
 	obj.bounceSpeed = 1;
+	obj.lastEnemyContact = null;
 	
 	// Methods
 	obj.setPosition = function(x,y){
@@ -43,7 +44,6 @@ var player = new (function(){
 		obj.image.src = 'graph/character/walksheet_'+obj.currentMovement+'.png';
 		// Try and catch to prevent that a JS error will block the whole game
 		if(!obj.isMoving) obj.actualFrame = 0;
-		
 		
 		try{
 			// Draw the tile on the canvas
@@ -137,9 +137,10 @@ var player = new (function(){
 		}
 	}
 	
-	obj.stopFalling = function(){
+	obj.stopFalling = function(y){
 		obj.isFalling = false;
 		obj.fallSpeed = 0;
+		if(y != null) obj.Y = y-obj.height;
 	}
 	
 	obj.stopMoving = function(){
@@ -154,17 +155,26 @@ var player = new (function(){
 		}
 	}
 	
-	obj.bounce = function(move){
+	obj.bounce = function(enemy){
 		obj.jump();
 		obj.hasBounced = true;
-		obj.bounceSpeed = 15;;
+		obj.bounceSpeed = 15;
+		obj.lastEnemyContact = enemy;
 	}
 	
 	obj.checkBounce = function(){
 		if(obj.hasBounced){
+			var enemy = obj.lastEnemyContact;
+			obj.allowedToMoveLeft = false;
+			obj.allowedToMoveRight = false;
 			obj.bounceSpeed -= 1;
-			(obj.currentMovement == 'r') ? obj.setPosition(obj.X-obj.bounceSpeed,obj.Y) : obj.setPosition(obj.X+obj.bounceSpeed,obj.Y);
-			(obj.currentMovement == 'r') ? obj.allowedToMoveRight = false : obj.allowedToMoveLeft = false;
+			
+			if(obj.currentMovement == 'r'){
+				obj.setPosition(obj.X-obj.bounceSpeed,obj.Y);
+			}	
+			else{
+				obj.setPosition(obj.X+obj.bounceSpeed,obj.Y);
+			}
 		}
 		if(obj.X <= 0){
 			obj.bounceSpeed = 0;
@@ -231,7 +241,7 @@ var player = new (function(){
 
 	obj.hitByEnemy = function(enemy){
 		gameStats.lifes--;	
-		obj.bounce(enemy.currentMovement);
+		obj.bounce(enemy);
 	}
 });
 

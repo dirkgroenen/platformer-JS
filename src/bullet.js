@@ -6,9 +6,7 @@ var bullet = function(x,y,direction){
 	// Create a new object based on functions
 	var obj = this;
 	
-	// create the image
-	obj.image = new Image();
-	obj.image.src = 'graph/other/bullet.png';
+	// create the bullet information
 	obj.width = 15;
 	obj.height = 15;
 	obj.X = x;
@@ -32,12 +30,11 @@ var bullet = function(x,y,direction){
 	// Create the method that will draw the tile on the given position
 	obj.draw = function(){
 		moveBullet();
-		// Try and catch to prevent that a JS error will block the whole game
-		try{
-			// Draw the tile on the canvas
-			// drawImage(Image Object, source X, source Y, source Width, source Height, destination X (X position), destination Y (Y position), Destination width, Destination height)
-			ctx.drawImage(obj.image, obj.X, obj.Y, obj.width, obj.height);
-		} catch(e){} // Do nothing
+		
+		ctx.beginPath();
+		ctx.arc(obj.X, obj.Y, 4, 0, 2 * Math.PI, false);
+		ctx.fillStyle = 'black';
+		ctx.fill();
 	};
 	
 	obj.remove = function(){
