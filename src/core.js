@@ -113,16 +113,18 @@ var boxCameraCheck = function(){
 
 // Draw the bullets and move them
 var drawBullets = function(){
+	var activebullets = 0;
 	bullets.forEach(function(bullet){
 		if(bullet.X <= c_width+scrolled && bullet.active){
 			bullet.draw();
+			activebullets++;
 		}
 		else{
 			bullet.active = false;
 			bullet.remove();
 		}
 	});
-	if(bullets.length == 0) bullets = new Array();
+	if(activebullets == 0) bullets = new Array();
 }
 
 var drawGameStats = function(){

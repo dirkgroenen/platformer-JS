@@ -144,12 +144,17 @@ var decorObject = function(x,y,type){
 	obj.X = x;
 	obj.Y = y;
 	obj.canFly = false;
+	obj.canCollide = false;
+	obj.active = true;
 	
 	/* All object numbers have their own image and sizes */
 	/* 	11 : hill_short
 	*	12 : hill_long
 	*	13 : shroom
-	*	14 : spikes
+	*	14 : grass
+	*	15 : fence
+	*	16 : fence_broken
+	*	17 : coin
 	*/
 	switch(type){
 		case 11:
@@ -166,6 +171,32 @@ var decorObject = function(x,y,type){
 			obj.width = 50;
 			obj.image.src = 'graph/shroom.png';
 		break;
+		case 14:
+			obj.height = 57;
+			obj.width = 50;
+			obj.image.src = 'graph/grass.png';
+		break;
+		case 15:
+			obj.height = 44;
+			obj.width = 50;
+			obj.image.src = 'graph/fence.png';
+		break;
+		case 16:
+			obj.height = 44;
+			obj.width = 50;
+			obj.image.src = 'graph/fence_broken.png';
+		break;
+		case 17:
+			obj.height = 30;
+			obj.width = 30;
+			obj.image.src = 'graph/coin_gold.png';
+			obj.canFly = true;
+			obj.canCollide = true;
+			obj.onCollision = function(){
+				gameStats.points += 5;
+				obj.active = false;
+			}
+		break;
 	}
 	
 	obj.setPosition = function(x,y){
@@ -175,15 +206,17 @@ var decorObject = function(x,y,type){
 	
 	// Draw function
 	obj.draw = function(){
-		// Try and catch to prevent that a JS error will block the whole game
-		try{
-			// Draw the tile on the canvas
-			// drawImage(Image Object, source X, source Y, source Width, source Height, destination X (X position), destination Y (Y position), Destination width, Destination height)
-			ctx.drawImage(obj.image, 0, 0, obj.width, obj.height, obj.X, obj.Y, obj.width, obj.height);
+		if(obj.active){
+			// Try and catch to prevent that a JS error will block the whole game
+			try{
+				// Draw the tile on the canvas
+				// drawImage(Image Object, source X, source Y, source Width, source Height, destination X (X position), destination Y (Y position), Destination width, Destination height)
+				ctx.drawImage(obj.image, 0, 0, obj.width, obj.height, obj.X, obj.Y, obj.width, obj.height);
+				
+			} catch(e){console.log(e)} // Do nothing
 			
-		} catch(e){console.log(e)} // Do nothing
-		
-		if(!obj.canFly) obj.placeInField();
+			if(!obj.canFly) obj.placeInField();
+		}
 	}
 		
 	obj.getColPoint = function(point){
@@ -267,6 +300,9 @@ var generateMap = function(map_array){
 					groundTiles.push(new groundTile(xCor,yCor,"ground"));
 					break;
 				case 3:
+					groundTiles.push(new groundTile(xCor,yCor,"ground_cave"));
+					break;
+				case 4:
 					groundTiles.push(new groundTile(xCor,yCor,"bridge"));
 					break;
 				default:

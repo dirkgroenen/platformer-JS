@@ -20,7 +20,7 @@ var checkCollision = function(){
 			// Check for a box on the left or right
 			if(player.isMoving || player.isFalling || player.isJumping){
 				// Check for tiles on the right side
-				if((player.getColPoint(23)['y'] <= tile.getColPoint(31)['y'] && player.getColPoint(23)['y'] >= tile.getColPoint(11)['y'])){
+				if((player.getColPoint(23)['y'] <= tile.getColPoint(31)['y'] && player.getColPoint(23)['y'] >= tile.getColPoint(11)['y']) || (player.getColPoint(13)['y'] <= tile.getColPoint(31)['y'] && player.getColPoint(13)['y'] >= tile.getColPoint(11)['y'])){
 					// Check the players Y position with the tiles, it's no collision as long as the players Y position is lower the the ground top position
 					if((player.getColPoint(23)['x'] >= tile.getColPoint(21)['x'] && player.getColPoint(22)['x'] <= tile.getColPoint(23)['x'])){
 						player.stopMoving('r');
@@ -31,7 +31,6 @@ var checkCollision = function(){
 						player.stopCamera = true;
 					}
 				}
-				
 				
 				// Check the tiles under the player's X
 				if(player.isFalling || player.isJumping){
@@ -89,4 +88,13 @@ var checkCollision = function(){
 			}
 		});
 	}	
+	
+	// Search for collidable decor
+	decorObjects.forEach(function(decor){
+		if((decor.X <= 1000 && decor.X >= 0) && ((decor.X+15)-player.X <= decor.width && (decor.X-10)-player.X >= -decor.width) && decor.canCollide && decor.active){
+			if((player.getColPoint(22)['y'] >= decor.getColPoint(12)['y'] && player.getColPoint(22)['y'] <= decor.getColPoint(32)['y']) || (player.getColPoint(12)['y'] >= decor.getColPoint(12)['y'] && player.getColPoint(12)['y'] <= decor.getColPoint(32)['y']) || (player.getColPoint(32)['y'] >= decor.getColPoint(12)['y'] && player.getColPoint(32)['y'] <= decor.getColPoint(32)['y'])){
+				decor.onCollision();
+			}
+		}
+	});
 };

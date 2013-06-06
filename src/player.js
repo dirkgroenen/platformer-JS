@@ -84,8 +84,6 @@ var player = new (function(){
 			obj.isFalling = true;
 		}
 		
-		obj.allowedToMoveLeft = true;
-		obj.allowedToMoveRight = true;
 		obj.holdMovement = false;
 	}
 	
