@@ -16,6 +16,7 @@
 var checkCollision = function(){
 	// Check if there is a box on his head or under his ass
 	if(bullets.length != 0 || player.isMoving || player.isFalling || player.isJumping){
+
 		groundTiles.forEach(function(tile){
 			// Check for a box on the left or right
 			if(player.isMoving || player.isFalling || player.isJumping){

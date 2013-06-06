@@ -155,6 +155,7 @@ var decorObject = function(x,y,type){
 	*	15 : fence
 	*	16 : fence_broken
 	*	17 : coin
+	*	18 : rock
 	*/
 	switch(type){
 		case 11:
@@ -190,12 +191,16 @@ var decorObject = function(x,y,type){
 			obj.height = 30;
 			obj.width = 30;
 			obj.image.src = 'graph/coin_gold.png';
-			obj.canFly = true;
 			obj.canCollide = true;
 			obj.onCollision = function(){
 				gameStats.points += 5;
 				obj.active = false;
 			}
+		break;
+		case 18:
+			obj.height = 29;
+			obj.width = 50;
+			obj.image.src = 'graph/rock.png';
 		break;
 	}
 	
@@ -215,7 +220,6 @@ var decorObject = function(x,y,type){
 				
 			} catch(e){console.log(e)} // Do nothing
 			
-			if(!obj.canFly) obj.placeInField();
 		}
 	}
 		
@@ -262,19 +266,6 @@ var decorObject = function(x,y,type){
 		return cors;
 	}	
 		
-	// Search for the nearest block to stand on
-	obj.placeInField = function(){
-		startPos = 0;
-		groundTiles.some(function(tile){
-			// Check for tiles below the player
-			if((tile.getColPoint(11)['x'] <= obj.getColPoint(32)['x'] && tile.getColPoint(13)['x'] >= obj.getColPoint(32)['x'])){
-				startPos = tile.getColPoint(11)['y'];
-				return true;
-			}
-		});
-		
-		obj.setPosition(obj.X,startPos-obj.height);
-	};
 }
 
 var generateMap = function(map_array){
