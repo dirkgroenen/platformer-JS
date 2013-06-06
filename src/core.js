@@ -81,8 +81,8 @@ var drawEnemies = function(){
 
 
 // !! Generatemap creates  the gameWidth which is needed when generating a moving camera !! //
-generateMap(level_1['map']); // Code that selects the level, at the moment hard coded level 1
-enemyGenerator(level_1['enemies']);
+generateMap(levels[gameStats.currentLevel-1]['map']); // Code that selects the level, at the moment hard coded level 1
+enemyGenerator(levels[gameStats.currentLevel-1]['enemies']);
 placePlayerInField(); // After generating the map: place player in field
 
 var boxCameraCheck = function(){
@@ -134,7 +134,7 @@ var drawGameStats = function(){
 /* ! Needs to be placed at the bottom of the core file */
 // Set the frames per second (FPS)
 var lastLoop = new Date;
-
+	
 var GameLoop = function(){
 	var thisLoop = new Date;
 	var fps = 1000 / (thisLoop - lastLoop);
