@@ -56,7 +56,7 @@ var checkCollision = function(){
 				bullets.forEach(function(bullet){
 					if((bullet.X >= 0 && bullet.X <= 1000)){
 						// Check for hit on rock
-						if(((bullet.X >= tile.getColPoint(11)['x']-bullet.width && bullet.X <= tile.getColPoint(11)['x']) || (bullet.X <= tile.getColPoint(11)['x']-bullet.width && bullet.X >= tile.getColPoint(13)['x'])) && (bullet.Y <= tile.getColPoint(31)['y'] && bullet.Y >= tile.getColPoint(11)['y'])){
+						if(((bullet.X >= tile.getColPoint(11)['x']-bullet.width && bullet.X <= tile.getColPoint(13)['x']+bullet.width) || (bullet.X <= tile.getColPoint(11)['x']-bullet.width && bullet.X >= tile.getColPoint(13)['x']+bullet.width)) && (bullet.Y <= tile.getColPoint(31)['y'] && bullet.Y >= tile.getColPoint(11)['y'])){
 							bullet.remove();
 						}
 						// Check for hit with enemy
