@@ -20,19 +20,20 @@ var checkCollision = function(){
 		groundTiles.forEach(function(tile){
 			// Check for a box on the left or right
 			if(player.isMoving || player.isFalling || player.isJumping){
-				// Check for tiles on the right side
-				if((player.getColPoint(23)['y'] <= tile.getColPoint(31)['y'] && player.getColPoint(23)['y'] >= tile.getColPoint(11)['y']) || (player.getColPoint(13)['y'] <= tile.getColPoint(31)['y'] && player.getColPoint(13)['y'] >= tile.getColPoint(11)['y'])){
-					// Check the players Y position with the tiles, it's no collision as long as the players Y position is lower the the ground top position
-					if((player.getColPoint(23)['x'] >= tile.getColPoint(21)['x'] && player.getColPoint(22)['x'] <= tile.getColPoint(23)['x'])){
-						player.stopMoving('r');
-						player.stopCamera = true;
-					}
-					if((player.getColPoint(21)['x'] <= tile.getColPoint(23)['x'] && player.getColPoint(22)['x'] >= tile.getColPoint(23)['x'])){
-						player.stopMoving('l');
-						player.stopCamera = true;
+				if(player.isMoving){
+					// Check for tiles on the right side
+					if((player.getColPoint(23)['y'] <= tile.getColPoint(31)['y'] && player.getColPoint(23)['y'] >= tile.getColPoint(11)['y']) || (player.getColPoint(13)['y']+10 <= tile.getColPoint(31)['y'] && player.getColPoint(13)['y']+10 >= tile.getColPoint(11)['y'])){
+						// Check the players Y position with the tiles, it's no collision as long as the players Y position is lower the the ground top position
+						if((player.getColPoint(23)['x'] >= tile.getColPoint(21)['x'] && player.getColPoint(22)['x'] <= tile.getColPoint(23)['x'])){
+							player.stopMoving('r');
+							player.stopCamera = true;
+						}
+						if((player.getColPoint(21)['x'] <= tile.getColPoint(23)['x'] && player.getColPoint(22)['x'] >= tile.getColPoint(23)['x'])){
+							player.stopMoving('l');
+							player.stopCamera = true;
+						}
 					}
 				}
-				
 				// Check the tiles under the player's X
 				if(player.isFalling || player.isJumping){
 					if((player.getColPoint(32)['x'] >= tile.getColPoint(11)['x'] && player.getColPoint(32)['x'] <= tile.getColPoint(13)['x']) || (player.getColPoint(33)['x']-20 >= tile.getColPoint(11)['x'] && player.getColPoint(33)['x']-20 <= tile.getColPoint(13)['x']) || (player.getColPoint(31)['x']+20 >= tile.getColPoint(11)['x'] && player.getColPoint(31)['x']+20 <= tile.getColPoint(13)['x'])){

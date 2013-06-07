@@ -208,9 +208,11 @@ var decorObject = function(x,y,type){
 			new Image().src = 'graph/switch_blue_off.png'; // preload 
 			obj.canCollide = true;
 			obj.onCollision = function(){
-				if(!obj.used) player.jump(25);
-				obj.image.src = 'graph/switch_blue_off.png';
-				obj.used = true;
+				if(!player.isFalling){
+					if(!obj.used) player.jump(25);
+					obj.image.src = 'graph/switch_blue_off.png';
+					obj.used = true;
+				}
 			}
 		break;
 	}
