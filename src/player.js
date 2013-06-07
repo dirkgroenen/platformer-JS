@@ -61,12 +61,12 @@ var player = new (function(){
 	}
 	
 	// Methods for jumping
-	obj.jump = function(){
+	obj.jump = function(speed){
 		// Prevent jump in sky
 		if(!obj.isJumping && ! obj.isFalling){
 			obj.fallSpeed = 0;
 			obj.isJumping = true;
-			obj.jumpSpeed = 15;
+			obj.jumpSpeed = (typeof speed == 'undefined') ? 15 : speed;
 			obj.allowedToMoveLeft = true;
 			obj.allowedToMoveRight = true;
 		}
@@ -96,12 +96,12 @@ var player = new (function(){
 	// Methods for falling
 	obj.checkFall = function(){
 		// Check if object is still above bottom of canvas, if not: stop falling
-		if(obj.Y < (c_height - obj.height)){
-			obj.setPosition(obj.X,obj.Y + obj.fallSpeed);
-			obj.fallSpeed++;
-		}
-		else{
-			obj.fallStop();
+		obj.setPosition(obj.X,obj.Y + obj.fallSpeed);
+		obj.fallSpeed++;
+		
+		// Check for game end
+		if(obj.Y > c_height){
+			gameStats.lifes--;
 		}
 	}
 	

@@ -176,6 +176,10 @@ var GameLoop = function(){
 		if(keyRegister[1] == 1) player.jump();
 		if(keyRegister[2] == 1) player.moveRight();
 	}
+
+	if(gameStats.lifes == 0){
+		// DEAD
+	}
 	
 	// Repeat the loop over and over again.
 	gLoop = setTimeout(GameLoop,FPS);

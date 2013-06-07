@@ -141,8 +141,6 @@ var decorObject = function(x,y,type){
 
 	// Assign image and other vars
 	obj.image = new Image();
-	obj.X = x;
-	obj.Y = y;
 	obj.canFly = false;
 	obj.canCollide = false;
 	obj.active = true;
@@ -202,7 +200,23 @@ var decorObject = function(x,y,type){
 			obj.width = 50;
 			obj.image.src = 'graph/rock.png';
 		break;
+		case 19:
+			obj.used = false;
+			obj.height = 32;
+			obj.width = 50;
+			obj.image.src = 'graph/switch_blue_on.png';
+			new Image().src = 'graph/switch_blue_off.png'; // preload 
+			obj.canCollide = true;
+			obj.onCollision = function(){
+				if(!obj.used) player.jump(25);
+				obj.image.src = 'graph/switch_blue_off.png';
+				obj.used = true;
+			}
+		break;
 	}
+	
+	obj.X = x;
+	obj.Y = y+(t_height-obj.height);
 	
 	obj.setPosition = function(x,y){
 		obj.X = x;
@@ -211,6 +225,7 @@ var decorObject = function(x,y,type){
 	
 	// Draw function
 	obj.draw = function(){
+	
 		if(obj.active){
 			// Try and catch to prevent that a JS error will block the whole game
 			try{
@@ -265,6 +280,7 @@ var decorObject = function(x,y,type){
 		}
 		return cors;
 	}	
+		
 		
 }
 
