@@ -9,6 +9,7 @@ var enemy = function(x,options){
 	obj.X = x;
 	obj.Y = 0;
 	obj.startX = x;
+	obj.fallSpeed = 1;
 	
 	// Walk animation vars, interval prevents that every interval has a new animation
 	obj.currentMovement = 'r';
@@ -79,28 +80,32 @@ var enemy = function(x,options){
 	
 	// Create the method that will draw the tile on the given position
 	obj.draw = function(){
-		if(!obj.dead){
-			obj.image.src = 'graph/enemies/'+obj.imageSourceName+'_'+obj.currentMovement+'.png';
-		}
-		else{
-			obj.image.src = 'graph/enemies/'+obj.imageSourceName+'_dead.png';
-			if(obj.Y < c_height && obj.blocksAboveGround != 0){
-				obj.Y += 10;
+		if(obj.Y >= 0 && obj.Y <= c_height){
+			if(!obj.dead){
+				obj.image.src = 'graph/enemies/'+obj.imageSourceName+'_'+obj.currentMovement+'.png';
 			}
-		}
-		// Try and catch to prevent that a JS error will block the whole game
-		try{
-			// Draw the tile on the canvas
-			// drawImage(Image Object, source X, source Y, source Width, source Height, destination X (X position), destination Y (Y position), Destination width, Destination height)
-			ctx.drawImage(obj.image, 0, obj.height * obj.actualFrame, obj.width, obj.height, obj.X, obj.Y, obj.width, obj.height);
-		} catch(e){} // Do nothing
-		
-		if (obj.interval == 8) {
-            (obj.actualFrame == obj.frames) ? obj.actualFrame = 0 : obj.actualFrame++;
-			obj.interval = 0;
-		}
-		if(obj.isMoving){
-			obj.interval++;
+			else{
+				obj.actualFrame = 0;
+				obj.image.src = 'graph/enemies/'+obj.imageSourceName+'_dead.png';
+				if(obj.Y < c_height && obj.blocksAboveGround != 0){
+					obj.Y += obj.fallSpeed++;
+				}
+				
+			}
+			// Try and catch to prevent that a JS error will block the whole game
+			try{
+				// Draw the tile on the canvas
+				// drawImage(Image Object, source X, source Y, source Width, source Height, destination X (X position), destination Y (Y position), Destination width, Destination height)
+				ctx.drawImage(obj.image, 0, obj.height * obj.actualFrame, obj.width, obj.height, obj.X, obj.Y, obj.width, obj.height);
+			} catch(e){} // Do nothing
+			
+			if (obj.interval == 8) {
+				(obj.actualFrame == obj.frames) ? obj.actualFrame = 0 : obj.actualFrame++;
+				obj.interval = 0;
+			}
+			if(obj.isMoving && !obj.dead){
+				obj.interval++;
+			}
 		}
 	}
 	
