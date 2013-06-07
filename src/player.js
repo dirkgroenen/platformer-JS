@@ -166,10 +166,13 @@ var player = new (function(){
 			var enemy = obj.lastEnemyContact;
 			obj.bounceSpeed -= 1;
 			
-			if(obj.currentMovement == 'r'){
+			if(obj.allowedToMoveRight == false || obj.allowedToMoveLeft == false){
+				obj.bounceSpeed = 0;
+			}
+			else if(obj.currentMovement == 'r'){
 				obj.setPosition(obj.X-obj.bounceSpeed,obj.Y);
 			}	
-			else{
+			else if(obj.currentMovement == 'l'){
 				obj.setPosition(obj.X+obj.bounceSpeed,obj.Y);
 			}
 		}

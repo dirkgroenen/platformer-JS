@@ -146,6 +146,9 @@ var GameLoop = function(){
 	if(!menu.menuOpened){
 		clear();
 		
+		// Check for collisions
+		checkCollision();
+		
 		// Draw the map and character
 		drawMap();
 		player.draw();
@@ -153,9 +156,6 @@ var GameLoop = function(){
 		
 		// Draw the game stats
 		drawGameStats();
-		
-		// Check for collisions
-		checkCollision();
 		
 		// Check for gravity
 		gravityCheck();
