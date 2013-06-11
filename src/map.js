@@ -155,66 +155,75 @@ var decorObject = function(x,y,type){
 	*	17 : coin
 	*	18 : rock
 	*/
-	switch(type){
-		case 11:
-			obj.image.src = 'graph/hill_short.png';
-			obj.height = 106;
-			obj.width = 50;
-		break;
-		case 12:
-			obj.height = 152;
-			obj.width = 50;
-			obj.image.src = 'graph/hill_long.png';
-		case 13:
-			obj.height = 44;
-			obj.width = 50;
-			obj.image.src = 'graph/shroom.png';
-		break;
-		case 14:
-			obj.height = 57;
-			obj.width = 50;
-			obj.image.src = 'graph/grass.png';
-		break;
-		case 15:
-			obj.height = 44;
-			obj.width = 50;
-			obj.image.src = 'graph/fence.png';
-		break;
-		case 16:
-			obj.height = 44;
-			obj.width = 50;
-			obj.image.src = 'graph/fence_broken.png';
-		break;
-		case 17:
-			obj.height = 30;
-			obj.width = 30;
-			obj.image.src = 'graph/coin_gold.png';
-			obj.canCollide = true;
-			obj.onCollision = function(){
-				gameStats.points += 5;
-				obj.active = false;
-			}
-		break;
-		case 18:
-			obj.height = 29;
-			obj.width = 50;
-			obj.image.src = 'graph/rock.png';
-		break;
-		case 19:
-			obj.used = false;
-			obj.height = 32;
-			obj.width = 50;
-			obj.image.src = 'graph/switch_blue_on.png';
-			new Image().src = 'graph/switch_blue_off.png'; // preload 
-			obj.canCollide = true;
-			obj.onCollision = function(){
-				if(!player.isFalling){
-					if(!obj.used) player.jump(25);
-					obj.image.src = 'graph/switch_blue_off.png';
-					obj.used = true;
+	if(typeof type == "string"){
+	
+	}
+	else{
+		switch(type){
+			case 11:
+				obj.image.src = 'graph/hill_short.png';
+				obj.height = 106;
+				obj.width = 50;
+			break;
+			case 12:
+				obj.height = 152;
+				obj.width = 50;
+				obj.image.src = 'graph/hill_long.png';
+			case 13:
+				obj.height = 44;
+				obj.width = 50;
+				obj.image.src = 'graph/shroom.png';
+			break;
+			case 14:
+				obj.height = 57;
+				obj.width = 50;
+				obj.image.src = 'graph/grass.png';
+			break;
+			case 15:
+				obj.height = 44;
+				obj.width = 50;
+				obj.image.src = 'graph/fence.png';
+			break;
+			case 16:
+				obj.height = 44;
+				obj.width = 50;
+				obj.image.src = 'graph/fence_broken.png';
+			break;
+			case 17:
+				obj.height = 30;
+				obj.width = 30;
+				obj.image.src = 'graph/coin_gold.png';
+				obj.canCollide = true;
+				obj.onCollision = function(){
+					gameStats.points += 5;
+					obj.active = false;
+					
+					new Audio('sounds/pick.mp3').play();
 				}
-			}
-		break;
+			break;
+			case 18:
+				obj.height = 29;
+				obj.width = 50;
+				obj.image.src = 'graph/rock.png';
+			break;
+			case 19:
+				obj.used = false;
+				obj.height = 32;
+				obj.width = 50;
+				obj.image.src = 'graph/switch_blue_on.png';
+				new Image().src = 'graph/switch_blue_off.png'; // preload 
+				obj.canCollide = true;
+				obj.onCollision = function(){
+					// Play sound
+					if(!obj.used) new Audio('sounds/springboard.mp3').play();
+					if(!player.isFalling){
+						if(!obj.used) player.jump(25);
+						obj.image.src = 'graph/switch_blue_off.png';
+						obj.used = true;
+					}
+				}
+			break;
+		}
 	}
 	
 	obj.X = x;

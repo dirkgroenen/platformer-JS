@@ -70,6 +70,7 @@ var checkCollision = function(){
 										if(enemie.hit() <= 0){
 											enemie.dead = true;
 											gameStats.enemiesKilled++;
+											
 										}
 									}
 								}
@@ -86,6 +87,8 @@ var checkCollision = function(){
 			if((enemie.X <= 1000 && enemie.X >= 0) && ((enemie.X+15)-player.X <= enemie.width && (enemie.X-10)-player.X >= -enemie.width) && !enemie.dead){
 				if((player.getColPoint(22)['y'] >= enemie.getColPoint(12)['y'] && player.getColPoint(22)['y'] <= enemie.getColPoint(32)['y']) || (player.getColPoint(12)['y'] >= enemie.getColPoint(12)['y'] && player.getColPoint(12)['y'] <= enemie.getColPoint(32)['y']) || (player.getColPoint(32)['y'] >= enemie.getColPoint(12)['y'] && player.getColPoint(32)['y'] <= enemie.getColPoint(32)['y'])){
 					player.hitByEnemy(enemie);
+					// Play sound
+					new Audio('sounds/ugh.mp3').play();
 				}
 			}
 		});
