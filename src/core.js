@@ -136,8 +136,18 @@ var drawGameStats = function(){
 /* ! Needs to be placed at the bottom of the core file */
 // Set the frames per second (FPS)
 var lastLoop = new Date;
+window.requestAnimFrame = (function(){
+  return  window.requestAnimationFrame       ||
+          window.webkitRequestAnimationFrame ||
+          window.mozRequestAnimationFrame    ||
+          function( callback ){
+            window.setTimeout(callback, 1000 / 60);
+          };
+})();	
 	
 var GameLoop = function(){
+	requestAnimFrame(GameLoop);
+
 	var thisLoop = new Date;
 	var fps = 1000 / (thisLoop - lastLoop);
 	lastLoop = thisLoop;
@@ -182,7 +192,7 @@ var GameLoop = function(){
 	}
 	
 	// Repeat the loop over and over again.
-	gLoop = setTimeout(GameLoop,FPS);
+	//gLoop = setTimeout(GameLoop,FPS);
 	
 }
 GameLoop();
